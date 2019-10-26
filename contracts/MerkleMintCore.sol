@@ -1,6 +1,8 @@
 pragma solidity ^0.5.0;
 
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "../GSN/Context.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Metadata.sol";
@@ -15,6 +17,8 @@ contract ProxyRegistry {
 
 contract MerkleMintCore is
     Initializable,
+    Ownable,
+    Context,
     ERC721,
     ERC721Enumerable,
     ERC721Metadata,
@@ -23,11 +27,14 @@ contract MerkleMintCore is
 {
     address proxyRegistryAddress;
 
+    string public baseTokenURI;
+
     function initialize(
         address[] memory minters,
         address[] memory pausers,
         address _proxyRegistryAddress
     ) public initializer {
+        Ownable.initialize(_msgSender());
         ERC721.initialize();
         ERC721Enumerable.initialize();
         ERC721Metadata.initialize("MerkleMintToken", "MMT");
@@ -51,6 +58,43 @@ contract MerkleMintCore is
         for (uint256 i = 0; i < pausers.length; ++i) {
             _addPauser(pausers[i]);
         }
+    }
+
+    /**
+    * @dev Mints a token to an address with a tokenURI.
+    * @param _to address of the future owner of the token
+    */
+    function mintTo(address _to) public onlyOwner {
+        uint256 newTokenId = _getNextTokenId();
+        _mint(_to, newTokenId);
+        _incrementTokenId();
+    }
+
+    /**
+    * @dev calculates the next token ID based on value of _currentTokenId 
+    * @return uint256 for the next token ID
+    */
+    function _getNextTokenId() private view returns (uint256) {
+        return _currentTokenId.add(1);
+    }
+
+    /**
+    * @dev increments the value of _currentTokenId 
+    */
+    function _incrementTokenId() private {
+        _currentTokenId++;
+    }
+
+    function baseTokenURI() public view returns (string memory) {
+        return baseTokenURI;
+    }
+
+    function changeBaseTokenURI(string memory _baseTokenURI) public onlyOwner {
+        baseTokenURI = _baseTokenURI;
+    }
+
+    function tokenURI(uint256 _tokenId) external view returns (string memory) {
+        return Strings.strConcat(baseTokenURI(), Strings.uint2str(_tokenId));
     }
 
     /**
