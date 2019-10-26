@@ -557,10 +557,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2711,
-                        2712
+                        2829,
+                        2830
                       ],
-                      "referencedDeclaration": 2712,
+                      "referencedDeclaration": 2830,
                       "src": "1600:7:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",

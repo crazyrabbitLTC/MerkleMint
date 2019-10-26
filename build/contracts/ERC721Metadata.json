@@ -795,10 +795,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2711,
-                        2712
+                        2829,
+                        2830
                       ],
-                      "referencedDeclaration": 2711,
+                      "referencedDeclaration": 2829,
                       "src": "962:7:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1435,10 +1435,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2711,
-                        2712
+                        2829,
+                        2830
                       ],
-                      "referencedDeclaration": 2712,
+                      "referencedDeclaration": 2830,
                       "src": "1997:7:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1683,10 +1683,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2711,
-                        2712
+                        2829,
+                        2830
                       ],
-                      "referencedDeclaration": 2712,
+                      "referencedDeclaration": 2830,
                       "src": "2432:7:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1918,7 +1918,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2757,
+                        "referencedDeclaration": 2875,
                         "src": "2906:5:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_ERC721Metadata_$1825",

@@ -673,10 +673,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2711,
-                        2712
+                        2829,
+                        2830
                       ],
-                      "referencedDeclaration": 2711,
+                      "referencedDeclaration": 2829,
                       "src": "381:7:13",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -900,7 +900,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2761,
+                        "referencedDeclaration": 2879,
                         "src": "545:5:13",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_ERC721Pausable_$1985",
@@ -1094,7 +1094,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2761,
+                        "referencedDeclaration": 2879,
                         "src": "669:5:13",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_ERC721Pausable_$1985",
@@ -1305,7 +1305,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2761,
+                        "referencedDeclaration": 2879,
                         "src": "815:5:13",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_ERC721Pausable_$1985",
