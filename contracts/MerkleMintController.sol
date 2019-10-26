@@ -44,7 +44,10 @@ contract MerkleMintController is Initializable, Ownable, Verify {
 
     function _findRoot(uint256 _series) internal returns (bytes32) {
         bytes32 merkleRoot = merkleRoots[_series];
-        require(merkleRoot != bytes32(0), "MerkleMintController::_findRoot:: No such series exists");
+        require(
+            merkleRoot != bytes32(0),
+            "MerkleMintController::_findRoot:: No such series exists"
+        );
         return merkleRoot;
     }
 }
