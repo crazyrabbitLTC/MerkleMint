@@ -3,9 +3,7 @@
   "contracts": {
     "MerkleMintCore": "MerkleMintCore"
   },
-  "dependencies": {
-    "@openzeppelin/contracts-ethereum-package": "^2.3.0"
-  },
+  "dependencies": {},
   "name": "merklemint",
   "version": "1.0.0",
   "compiler": {

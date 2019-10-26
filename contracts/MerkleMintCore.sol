@@ -1,13 +1,14 @@
 pragma solidity ^0.5.0;
 
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "../GSN/Context.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Metadata.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721MetadataMintable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Pausable.sol";
+import "./Strings.sol";
 
 contract OwnableDelegateProxy {}
 
@@ -18,22 +19,24 @@ contract ProxyRegistry {
 contract MerkleMintCore is
     Initializable,
     Ownable,
-    Context,
     ERC721,
     ERC721Enumerable,
     ERC721Metadata,
     ERC721MetadataMintable,
     ERC721Pausable
 {
-    address proxyRegistryAddress;
+    using Strings for string;
 
-    string public baseTokenURI;
+    address proxyRegistryAddress;
+    uint256 private _currentTokenId;
+    string public tokenURIBase;
 
     function initialize(
         address[] memory minters,
         address[] memory pausers,
         address _proxyRegistryAddress
     ) public initializer {
+        _currentTokenId = 0;
         Ownable.initialize(_msgSender());
         ERC721.initialize();
         ERC721Enumerable.initialize();
@@ -86,11 +89,11 @@ contract MerkleMintCore is
     }
 
     function baseTokenURI() public view returns (string memory) {
-        return baseTokenURI;
+        return tokenURIBase;
     }
 
     function changeBaseTokenURI(string memory _baseTokenURI) public onlyOwner {
-        baseTokenURI = _baseTokenURI;
+        tokenURIBase = _baseTokenURI;
     }
 
     function tokenURI(uint256 _tokenId) external view returns (string memory) {
