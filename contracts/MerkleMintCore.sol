@@ -1,110 +1,69 @@
 pragma solidity ^0.5.0;
 
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/StandaloneERC721.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Full.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Enumerable.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Metadata.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721MetadataMintable.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Pausable.sol";
 
-contract MerkleMintCore is Initializable {
-    StandaloneERC721 token;
+contract OwnableDelegateProxy {}
 
-    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
-    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+contract ProxyRegistry {
+    mapping(address => OwnableDelegateProxy) public proxies;
+}
 
-    function initialize(StandaloneERC721 tokenAddress) public initializer {
-        token = tokenAddress;
+contract MerkleMintCore is
+    Initializable,
+    ERC721,
+    ERC721Enumerable,
+    ERC721Metadata,
+    ERC721MetadataMintable,
+    ERC721Pausable
+{
+    address proxyRegistryAddress;
+
+    function initialize(
+        address[] memory minters,
+        address[] memory pausers,
+        address _proxyRegistryAddress
+    ) public initializer {
+        ERC721.initialize();
+        ERC721Enumerable.initialize();
+        ERC721Metadata.initialize("MerkleMintToken", "MMT");
+
+        //Setup OpenSea Proxy
+        proxyRegistryAddress = _proxyRegistryAddress;
+
+        // Initialize the minter and pauser roles, and renounce them
+        ERC721MetadataMintable.initialize(address(this));
+        _removeMinter(address(this));
+
+        ERC721Pausable.initialize(address(this));
+        _removePauser(address(this));
+
+        // Add the requested minters and pausers (this can be done after renouncing since
+        // these are the internal calls)
+        for (uint256 i = 0; i < minters.length; ++i) {
+            _addMinter(minters[i]);
+        }
+
+        for (uint256 i = 0; i < pausers.length; ++i) {
+            _addPauser(pausers[i]);
+        }
     }
 
     /**
-     * @dev Returns the number of NFTs in `owner`'s account.
-     */
-    function balanceOf(address owner) public view returns (uint256 balance) {
-        return token.balanceOf(owner);
-    }
-
-    /**
-     * @dev Returns the owner of the NFT specified by `tokenId`.
-     */
-    function ownerOf(uint256 tokenId) public view returns (address owner) {
-        return token.ownerOf(tokenId);
-    }
-
-    /**
-     * @dev Transfers a specific NFT (`tokenId`) from one account (`from`) to
-     * another (`to`)
-     * Requirements:
-     * - `from`, `to` cannot be zero.
-     * - `tokenId` must be owned by `from`.
-     * - If the caller is not `from`, it must be have been allowed to move this
-     * NFT by either `approve` or `setApproveForAll`.
-     */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public {
-        token.safeTransferFrom(from, to, tokenId);
-        emit Transfer(from, to, tokenId);
-    }
-    /**
-     * @dev Transfers a specific NFT (`tokenId`) from one account (`from`) to
-     * another (`to`).
-     *
-     * Requirements:
-     * - If the caller is not `from`, it must be approved to move this NFT by
-     * either `approve` or `setApproveForAll`.
-     */
-    function transferFrom(address from, address to, uint256 tokenId) public {
-        token.transferFrom(from, to, tokenId);
-        emit Transfer(from, to, tokenId);
-    }
-    function approve(address to, uint256 tokenId) public {
-        token.approve(to, tokenId);
-        emit Approval(token.ownerOf(tokenId), to, tokenId);
-    }
-    function getApproved(uint256 tokenId) public view returns (address operator) {
-        return token.getApproved(tokenId);
-    }
-
-    function setApprovalForAll(address operator, bool _approved) public {
-        token.setApprovalForAll(operator, _approved);
-        emit ApprovalForAll(token._msgSender(), operator, _approved);
-    }
+   * Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
+   */
     function isApprovedForAll(address owner, address operator) public view returns (bool) {
-        return isApprovedForAll(owner, operator);
+        // Whitelist OpenSea proxy contract for easy trading.
+        ProxyRegistry proxyRegistry = ProxyRegistry(proxyRegistryAddress);
+        if (address(proxyRegistry.proxies(owner)) == operator) {
+            return true;
+        }
+
+        return super.isApprovedForAll(owner, operator);
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public {
-        token.safeTransferFrom(from, to, tokenId, data);
-    }
-
-    function totalSupply() public view returns (uint256) {
-        return token.totalSupply();
-    }
-
-    function tokenOfOwnerByIndex(address owner, uint256 index)
-        public
-        view
-        returns (uint256 tokenId)
-    {
-        return token.tokenOfOwnerByIndex(owner, index);
-    }
-
-    function tokenByIndex(uint256 index) public view returns (uint256) {
-        return token.tokenByIndex(index);
-    }
-
-    function name() external view returns (string memory) {
-        return token.name();
-    }
-    function symbol() external view returns (string memory) {
-        return token.symbol();
-    }
-    function tokenURI(uint256 tokenId) external view returns (string memory) {
-        return token.tokenURI(tokenId);
-    }
-
-    function mintWithTokenURI(address to, uint256 tokenId, string memory tokenURI)
-        public
-        returns (bool)
-    {
-        emit Transfer(address(0), to, tokenId);
-        return token.mintWithTokenURI(to, tokenId, tokenURI);
-    }
 }
