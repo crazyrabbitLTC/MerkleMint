@@ -4,7 +4,9 @@
   "description": "Tool for Minting NFT on Ethereum with support for Set inclusion checking",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
+    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,16 @@
     "@openzeppelin/upgrades": "^2.5.3"
   },
   "devDependencies": {
-    "@openzeppelin/test-helpers": "^0.5.3"
+    "@openzeppelin/test-helpers": "^0.5.3",
+    "husky": "^3.0.9",
+    "prettier": "^1.18.2",
+    "prettier-plugin-solidity": "^1.0.0-alpha.34",
+    "solhint": "^2.3.0",
+    "solhint-plugin-prettier": "0.0.3"
+  },
+  "husky": {
+    "hooks": {
+       "pre-commit": "npm run prettier:solidity"
+    }
   }
 }
