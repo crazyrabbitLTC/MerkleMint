@@ -1179,7 +1179,7 @@
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2686,
+                            "referencedDeclaration": 2705,
                             "src": "834:4:19",
                             "typeDescriptions": {
                               "typeIdentifier": "t_contract$_StandaloneERC721_$2298",
@@ -1287,7 +1287,7 @@
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2686,
+                            "referencedDeclaration": 2705,
                             "src": "872:4:19",
                             "typeDescriptions": {
                               "typeIdentifier": "t_contract$_StandaloneERC721_$2298",
@@ -1379,7 +1379,7 @@
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2686,
+                            "referencedDeclaration": 2705,
                             "src": "923:4:19",
                             "typeDescriptions": {
                               "typeIdentifier": "t_contract$_StandaloneERC721_$2298",
@@ -1487,7 +1487,7 @@
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2686,
+                            "referencedDeclaration": 2705,
                             "src": "961:4:19",
                             "typeDescriptions": {
                               "typeIdentifier": "t_contract$_StandaloneERC721_$2298",

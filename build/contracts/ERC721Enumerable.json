@@ -870,10 +870,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2633,
-                        2634
+                        2652,
+                        2653
                       ],
-                      "referencedDeclaration": 2633,
+                      "referencedDeclaration": 2652,
                       "src": "1367:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1241,10 +1241,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2633,
-                        2634
+                        2652,
+                        2653
                       ],
-                      "referencedDeclaration": 2634,
+                      "referencedDeclaration": 2653,
                       "src": "2171:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1653,10 +1653,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2633,
-                        2634
+                        2652,
+                        2653
                       ],
-                      "referencedDeclaration": 2634,
+                      "referencedDeclaration": 2653,
                       "src": "2963:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1879,7 +1879,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2675,
+                        "referencedDeclaration": 2694,
                         "src": "3542:5:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_ERC721Enumerable_$1668",
@@ -2222,7 +2222,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2675,
+                        "referencedDeclaration": 2694,
                         "src": "4016:5:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_ERC721Enumerable_$1668",
@@ -2521,7 +2521,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2675,
+                        "referencedDeclaration": 2694,
                         "src": "4490:5:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_ERC721Enumerable_$1668",

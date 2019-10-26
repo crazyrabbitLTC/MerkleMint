@@ -1,7 +1,7 @@
 {
   "manifestVersion": "2.2",
   "contracts": {
-    "MerkleMint": "MerkleMint"
+    "MerkleMintCore": "MerkleMintCore"
   },
   "dependencies": {
     "@openzeppelin/contracts-ethereum-package": "^2.3.0"

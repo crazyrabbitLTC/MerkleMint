@@ -1,11 +1,15 @@
 pragma solidity ^0.5.0;
 
-import '@openzeppelin/upgrades/contracts/Initializable.sol';
-import '@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/StandaloneERC721.sol';
-import '@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Full.sol';
+import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/StandaloneERC721.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Full.sol";
 
-contract MerkleMint is Initializable {
+contract MerkleMintCore is Initializable {
     StandaloneERC721 token;
+
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
     function initialize(StandaloneERC721 tokenAddress) public initializer {
         token = tokenAddress;
@@ -36,6 +40,7 @@ contract MerkleMint is Initializable {
      */
     function safeTransferFrom(address from, address to, uint256 tokenId) public {
         token.safeTransferFrom(from, to, tokenId);
+        emit Transfer(from, to, tokenId);
     }
     /**
      * @dev Transfers a specific NFT (`tokenId`) from one account (`from`) to
@@ -47,9 +52,11 @@ contract MerkleMint is Initializable {
      */
     function transferFrom(address from, address to, uint256 tokenId) public {
         token.transferFrom(from, to, tokenId);
+        emit Transfer(from, to, tokenId);
     }
     function approve(address to, uint256 tokenId) public {
         token.approve(to, tokenId);
+        emit Approval(token.ownerOf(tokenId), to, tokenId);
     }
     function getApproved(uint256 tokenId) public view returns (address operator) {
         return token.getApproved(tokenId);
@@ -57,6 +64,7 @@ contract MerkleMint is Initializable {
 
     function setApprovalForAll(address operator, bool _approved) public {
         token.setApprovalForAll(operator, _approved);
+        emit ApprovalForAll(token._msgSender(), operator, _approved);
     }
     function isApprovedForAll(address owner, address operator) public view returns (bool) {
         return isApprovedForAll(owner, operator);
@@ -92,4 +100,11 @@ contract MerkleMint is Initializable {
         return token.tokenURI(tokenId);
     }
 
+    function mintWithTokenURI(address to, uint256 tokenId, string memory tokenURI)
+        public
+        returns (bool)
+    {
+        emit Transfer(address(0), to, tokenId);
+        return token.mintWithTokenURI(to, tokenId, tokenURI);
+    }
 }

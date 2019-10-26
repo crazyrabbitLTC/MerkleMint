@@ -736,10 +736,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2633,
-                        2634
+                        2652,
+                        2653
                       ],
-                      "referencedDeclaration": 2633,
+                      "referencedDeclaration": 2652,
                       "src": "404:7:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -826,10 +826,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2633,
-                        2634
+                        2652,
+                        2653
                       ],
-                      "referencedDeclaration": 2633,
+                      "referencedDeclaration": 2652,
                       "src": "451:7:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
