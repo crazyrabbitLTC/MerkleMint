@@ -15,9 +15,7 @@ contract MerkleMintCore is
     ERC721MetadataMintable,
     ERC721Pausable
 {
-
     function initialize(address[] memory minters, address[] memory pausers) public initializer {
-
         ERC721.initialize();
         ERC721Enumerable.initialize();
         ERC721Metadata.initialize("MerkleMintToken", "MMT");
