@@ -1,0 +1,109 @@
+{
+  "contracts": {
+    "MerkleMint": {
+      "address": "0x571702D73FD10267979b152FC6f5034014cd5961",
+      "constructorCode": "60806040523480156100115760006000fd5b50610017565b611827806100266000396000f3fe",
+      "bodyBytecodeHash": "8b9fa964138fe68d1e02fb4574487831e08fdc7b10ff885e7e49ca49ab44019e",
+      "localBytecodeHash": "0225dfe632031dabff208761b3d7be67b8fb0461f5f38eb3c06d4db14a9344ea",
+      "deployedBytecodeHash": "0225dfe632031dabff208761b3d7be67b8fb0461f5f38eb3c06d4db14a9344ea",
+      "types": {
+        "t_bool": {
+          "id": "t_bool",
+          "kind": "elementary",
+          "label": "bool"
+        },
+        "t_uint256": {
+          "id": "t_uint256",
+          "kind": "elementary",
+          "label": "uint256"
+        },
+        "t_array:50<t_uint256>": {
+          "id": "t_array:50<t_uint256>",
+          "valueType": "t_uint256",
+          "length": "50",
+          "kind": "array",
+          "label": "uint256[50]"
+        },
+        "t_address": {
+          "id": "t_address",
+          "kind": "elementary",
+          "label": "address"
+        }
+      },
+      "storage": [
+        {
+          "contract": "Initializable",
+          "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
+          "label": "initialized",
+          "astId": 2321,
+          "type": "t_bool",
+          "src": "757:24:21"
+        },
+        {
+          "contract": "Initializable",
+          "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
+          "label": "initializing",
+          "astId": 2323,
+          "type": "t_bool",
+          "src": "876:25:21"
+        },
+        {
+          "contract": "Initializable",
+          "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
+          "label": "______gap",
+          "astId": 2379,
+          "type": "t_array:50<t_uint256>",
+          "src": "1951:29:21"
+        },
+        {
+          "contract": "MerkleMint",
+          "path": "contracts/MerkleMint.sol",
+          "label": "token",
+          "astId": 2389,
+          "type": "t_address",
+          "src": "313:22:22"
+        }
+      ],
+      "warnings": {
+        "hasConstructor": false,
+        "hasSelfDestruct": false,
+        "hasDelegateCall": false,
+        "hasInitialValuesInDeclarations": false,
+        "uninitializedBaseContracts": []
+      }
+    }
+  },
+  "solidityLibs": {},
+  "proxies": {
+    "@openzeppelin/contracts-ethereum-package/StandaloneERC721": [
+      {
+        "address": "0x5285900F2780CAf9080ed70118d5747492B646c8",
+        "version": "2.3.0",
+        "implementation": "0xA1820F555D92C0716571C635688a7fD54BCd278C",
+        "admin": "0xf1D109e8a77d4AB76a8440A3fE2De92F7D586e53",
+        "kind": "Upgradeable"
+      }
+    ],
+    "merklemint/MerkleMint": [
+      {
+        "address": "0x17015789Cea05FC571C86837ea48819F9467061E",
+        "version": "1.0.0",
+        "implementation": "0x571702D73FD10267979b152FC6f5034014cd5961",
+        "admin": "0xf1D109e8a77d4AB76a8440A3fE2De92F7D586e53",
+        "kind": "Upgradeable"
+      }
+    ]
+  },
+  "manifestVersion": "2.2",
+  "dependencies": {
+    "@openzeppelin/contracts-ethereum-package": {
+      "package": "0x451BAC16E4Bc0e884AE74a5A1EfCc984eE7fdD8E",
+      "version": "2.3.0",
+      "customDeploy": true
+    }
+  },
+  "version": "1.0.0",
+  "proxyAdmin": {
+    "address": "0xf1D109e8a77d4AB76a8440A3fE2De92F7D586e53"
+  }
+}

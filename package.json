@@ -19,5 +19,12 @@
   "bugs": {
     "url": "https://github.com/crazyrabbitLTC/MerkleMint/issues"
   },
-  "homepage": "https://github.com/crazyrabbitLTC/MerkleMint#readme"
+  "homepage": "https://github.com/crazyrabbitLTC/MerkleMint#readme",
+  "dependencies": {
+    "@openzeppelin/contracts-ethereum-package": "^2.3.0",
+    "@openzeppelin/upgrades": "^2.5.3"
+  },
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.3"
+  }
 }

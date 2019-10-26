@@ -1,7 +1,18 @@
 {
   "manifestVersion": "2.2",
-  "contracts": {},
-  "dependencies": {},
+  "contracts": {
+    "MerkleMint": "MerkleMint"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts-ethereum-package": "^2.3.0"
+  },
   "name": "merklemint",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "compiler": {
+    "manager": "openzeppelin",
+    "solcVersion": "0.5.12",
+    "compilerSettings": {
+      "optimizer": {}
+    }
+  }
 }
