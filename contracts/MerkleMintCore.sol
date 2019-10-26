@@ -15,14 +15,10 @@ contract MerkleMintCore is
     ERC721MetadataMintable,
     ERC721Pausable
 {
-
     uint256 private _currentTokenId;
     string public tokenURIBase;
 
-    function initialize(
-        address[] memory minters,
-        address[] memory pausers
-    ) public initializer {
+    function initialize(address[] memory minters, address[] memory pausers) public initializer {
         _currentTokenId = 0;
         ERC721.initialize();
         ERC721Enumerable.initialize();
