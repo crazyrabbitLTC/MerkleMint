@@ -22,12 +22,14 @@ contract("MerkleMintController", async ([sender, secondAddress, ...otherAccounts
 
   let tokenId = 1;
   let tokenURI = "Uri Data";
+  let series = 1;
 
   beforeEach(async () => {
     mmCore = await MerkleMintCore.new();
     mmController = await MerkleMintController.new();
 
-    await mmController.initialize(mmCore.address, root);
+    await mmController.initializeController(mmCore.address);
+    await mmController.addMerkleRoot(series, root);
     await mmCore.initialize([mmController.address], [mmController.address]);
   });
 
@@ -41,7 +43,7 @@ contract("MerkleMintController", async ([sender, secondAddress, ...otherAccounts
 
   it("it can mint a token", async () => {
     const result = await mmController
-      .mintAsset(validWord, leaf, proof, positions, tokenId, tokenURI, {from: sender})
+      .mintAsset(validWord, leaf, proof, positions, tokenId, tokenURI, series, {from: sender})
     const URI = await mmCore.tokenURI(tokenId);
 
     assert.equal(URI, tokenURI);

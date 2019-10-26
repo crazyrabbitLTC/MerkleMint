@@ -7,12 +7,23 @@ import "./MerkleMintCore.sol";
 
 contract MerkleMintController is Initializable, Ownable, Verify {
     MerkleMintCore public token;
-    bytes32 public merkleRoot;
+    mapping(uint256 => bytes32) public merkleRoots;
 
-    function initialize(MerkleMintCore _token, bytes32 _merkleRoot) public initializer {
+    event SeriesAdded(uint256 indexed SeriesNumber, bytes32 indexed merkleRoot);
+
+    function initializeController(MerkleMintCore _token) public initializer {
         Ownable.initialize(msg.sender);
         token = _token;
-        merkleRoot = _merkleRoot;
+
+    }
+
+    function addMerkleRoot(uint256 _seriesNumber, bytes32 _merkleRoot) public onlyOwner {
+        require(
+            merkleRoots[_seriesNumber] == bytes32(0),
+            "MerkleMintController::addMerkleRoot:: Series already Exists"
+        );
+        merkleRoots[_seriesNumber] = _merkleRoot;
+        emit SeriesAdded(_seriesNumber, _merkleRoot);
     }
 
     function mintAsset(
@@ -21,13 +32,19 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         bytes32[] memory _proof,
         uint256[] memory _positions,
         uint256 tokenId,
-        string memory tokenURI
+        string memory tokenURI,
+        uint256 _series
     ) public onlyOwner {
         require(
-            isValidData(_word, merkleRoot, _leaf, _proof, _positions),
+            isValidData(_word, _findRoot(_series), _leaf, _proof, _positions),
             "MerkleMintController:: Not a valid Asset"
         );
         token.mintWithTokenURI(address(this), tokenId, tokenURI);
     }
 
+    function _findRoot(uint256 _series) internal returns (bytes32) {
+        bytes32 merkleRoot = merkleRoots[_series];
+        require(merkleRoot != bytes32(0), "MerkleMintController::_findRoot:: No such series exists");
+        return merkleRoot;
+    }
 }
