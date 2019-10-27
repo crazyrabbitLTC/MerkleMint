@@ -7,9 +7,22 @@ import "./MerkleMintCore.sol";
 
 contract MerkleMintController is Initializable, Ownable, Verify {
     MerkleMintCore public token;
-    mapping(uint256 => bytes32) public merkleRoots;
 
-    event SeriesAdded(uint256 indexed SeriesNumber, bytes32 indexed merkleRoot);
+    struct Serie {
+        bytes32 merkleRoot;
+        bytes32[] ipfsHash;
+        string serieName;
+        uint256 seriesID;
+    }
+
+    mapping(uint256 => Serie) public series;
+
+    event SeriesAdded(
+        uint256 indexed SeriesNumber,
+        bytes32 IPFSHash,
+        bytes32 indexed merkleRoot,
+        string SeriesName
+    );
 
     function initializeController(MerkleMintCore _token) public initializer {
         Ownable.initialize(msg.sender);
@@ -17,13 +30,25 @@ contract MerkleMintController is Initializable, Ownable, Verify {
 
     }
 
-    function addMerkleRoot(uint256 _seriesNumber, bytes32 _merkleRoot) public onlyOwner {
+    function addMerkleRoot(
+        uint256 _seriesNumber,
+        bytes32 _merkleRoot,
+        string memory _seriesName,
+        bytes32 _ipfsHash
+    ) public onlyOwner {
         require(
-            merkleRoots[_seriesNumber] == bytes32(0),
+            series[_seriesNumber].seriesID == 0,
             "MerkleMintController::addMerkleRoot:: Series already Exists"
         );
-        merkleRoots[_seriesNumber] = _merkleRoot;
-        emit SeriesAdded(_seriesNumber, _merkleRoot);
+
+        Serie memory serie;
+        serie.merkleRoot = _merkleRoot;
+        serie.seriesID = _seriesNumber;
+        serie.serieName = _seriesName;
+
+        series[_seriesNumber] = serie;
+        series[_seriesNumber].ipfsHash.push(_ipfsHash);
+        emit SeriesAdded(_seriesNumber, _ipfsHash, _merkleRoot, _seriesName);
     }
 
     function mintAsset(
@@ -43,7 +68,7 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     }
 
     function _findRoot(uint256 _series) internal returns (bytes32) {
-        bytes32 merkleRoot = merkleRoots[_series];
+        bytes32 merkleRoot = series[_series].merkleRoot;
         require(
             merkleRoot != bytes32(0),
             "MerkleMintController::_findRoot:: No such series exists"

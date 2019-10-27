@@ -23,13 +23,15 @@ contract("MerkleMintController", async ([sender, secondAddress, ...otherAccounts
   let tokenId = 1;
   let tokenURI = "Uri Data";
   let series = 1;
+  let seriesName = "First Series";
+  let ipfsHash = keccak256(seriesName);
 
   beforeEach(async () => {
     mmCore = await MerkleMintCore.new();
     mmController = await MerkleMintController.new();
 
     await mmController.initializeController(mmCore.address);
-    await mmController.addMerkleRoot(series, root);
+    await mmController.addMerkleRoot(series, root, seriesName, ipfsHash);
     await mmCore.initialize([mmController.address], [mmController.address]);
   });
 
