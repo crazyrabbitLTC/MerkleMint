@@ -18,11 +18,12 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     mapping(uint256 => Serie) public series;
 
     event SeriesAdded(
-        uint256 indexed SeriesNumber,
+        uint256 indexed SerieNumber,
         bytes32 IPFSHash,
         bytes32 indexed merkleRoot,
         string SeriesName
     );
+    event IPFSHashAdded(uint256 indexed SerieNumber, bytes32 IPFSHash);
 
     function initializeController(MerkleMintCore _token) public initializer {
         Ownable.initialize(msg.sender);
@@ -31,24 +32,24 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     }
 
     function addMerkleRoot(
-        uint256 _seriesNumber,
+        uint256 _serieNumber,
         bytes32 _merkleRoot,
         string memory _seriesName,
         bytes32 _ipfsHash
     ) public onlyOwner {
         require(
-            series[_seriesNumber].seriesID == 0,
+            series[_serieNumber].seriesID == 0,
             "MerkleMintController::addMerkleRoot:: Series already Exists"
         );
 
         Serie memory serie;
         serie.merkleRoot = _merkleRoot;
-        serie.seriesID = _seriesNumber;
+        serie.seriesID = _serieNumber;
         serie.serieName = _seriesName;
 
-        series[_seriesNumber] = serie;
-        series[_seriesNumber].ipfsHash.push(_ipfsHash);
-        emit SeriesAdded(_seriesNumber, _ipfsHash, _merkleRoot, _seriesName);
+        series[_serieNumber] = serie;
+        series[_serieNumber].ipfsHash.push(_ipfsHash);
+        emit SeriesAdded(_serieNumber, _ipfsHash, _merkleRoot, _seriesName);
     }
 
     function mintAsset(
@@ -67,12 +68,22 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         token.mintWithTokenURI(address(this), tokenId, tokenURI);
     }
 
-    function _findRoot(uint256 _series) internal returns (bytes32) {
+    function _findRoot(uint256 _series) internal view returns (bytes32) {
         bytes32 merkleRoot = series[_series].merkleRoot;
         require(
             merkleRoot != bytes32(0),
             "MerkleMintController::_findRoot:: No such series exists"
         );
         return merkleRoot;
+    }
+
+    function addIpfsRefToSerie(bytes32 _ipfsHash, uint256 _serieNumber) public onlyOwner {
+        require(
+            series[_serieNumber].seriesID == _serieNumber,
+            "MerkleMintController::addIpfsRefToSerie:: Serie does not Exist"
+        );
+
+        series[_serieNumber].ipfsHash.push(_ipfsHash);
+        emit IPFSHashAdded(_serieNumber, _ipfsHash);
     }
 }

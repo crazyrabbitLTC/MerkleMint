@@ -44,10 +44,25 @@ contract("MerkleMintController", async ([sender, secondAddress, ...otherAccounts
   });
 
   it("it can mint a token", async () => {
-    const result = await mmController
-      .mintAsset(validWord, leaf, proof, positions, tokenId, tokenURI, series, {from: sender})
+    const result = await mmController.mintAsset(
+      validWord,
+      leaf,
+      proof,
+      positions,
+      tokenId,
+      tokenURI,
+      series,
+      {from: sender}
+    );
     const URI = await mmCore.tokenURI(tokenId);
 
     assert.equal(URI, tokenURI);
+  });
+
+  it("it can add additional IPFSHash", async () => {
+    const newHash = keccak256("The second Thing");
+    const receipt = await mmController.addIpfsRefToSerie(newHash, 1, {from: sender});
+
+    expectEvent(receipt, "IPFSHashAdded", {SerieNumber: new BN(1)});
   });
 });
