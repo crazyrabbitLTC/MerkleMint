@@ -1,3 +1,6 @@
+
+[![Coverage Status](https://coveralls.io/repos/github/crazyrabbitLTC/MerkleMint/badge.svg?branch=master)](https://coveralls.io/github/crazyrabbitLTC/MerkleMint?branch=master)
+
 # MerkleMint
 A solution to minting non-fungible tokens for items in a) large data sets or b) data sets with large items. 
 
