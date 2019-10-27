@@ -7,6 +7,12 @@ import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Me
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721MetadataMintable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Pausable.sol";
 
+/**
+ * @title Complete ERC721 Non-Fungible Token Standard basic implementation with Metadata, Minting, and Pause Functionality
+ * @dev see https://eips.ethereum.org/EIPS/eip-721
+ * @dev Based on OpenZeppelin Contracts Ethereum Package
+ * @dev see https://github.com/OpenZeppelin/openzeppelin-contracts-ethereum-package
+ */
 contract MerkleMintCore is
     Initializable,
     ERC721,
@@ -15,6 +21,11 @@ contract MerkleMintCore is
     ERC721MetadataMintable,
     ERC721Pausable
 {
+    /**
+     * @dev Initialize the Token Contract with Minters and Pausers. The name+symbol are hardCoded.
+     * @param minters array of addresses that are allowed to mint.
+     * @param pausers array of addresses that are allowed to Pause.
+     */
     function initialize(address[] memory minters, address[] memory pausers) public initializer {
         ERC721.initialize();
         ERC721Enumerable.initialize();
