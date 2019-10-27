@@ -5,7 +5,6 @@ import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
 import "./MerkleMintCore.sol";
 
-
 /**
  * @title MerkleMintController Controller for MerkleProof based Token Minting
  * @dev The ERC721 token is deployed seperately, with MerkleMintController set as an allowed Minter. 
@@ -15,18 +14,17 @@ import "./MerkleMintCore.sol";
  * @dev This allows for manageing a token that can assure users that assets belong to a set of defined range. 
  */
 contract MerkleMintController is Initializable, Ownable, Verify {
-
-  //Address of the NFT Token
+    //Address of the NFT Token
     MerkleMintCore public token;
 
-  //Struct that defines a Serie
+    //Struct that defines a Serie
     struct Serie {
         bytes32 merkleRoot;
         bytes32[] ipfsHash;
         string serieName;
         uint256 seriesID;
     }
-//Maping of Series by integer
+    //Maping of Series by integer
     mapping(uint256 => Serie) public series;
 
     /**
@@ -49,7 +47,6 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     * @param IPFSHash is the location of the off-chain data which is being added.
     */
     event IPFSHashAdded(uint256 indexed SerieNumber, bytes32 IPFSHash);
-
 
     /**
     * @dev Initialized the Controller Contract. Called at deployment time.
@@ -102,7 +99,7 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     * @return MerkleMintCore will mint a token and emit an event.
     */
     function mintAsset(
-        string memory  _asset,
+        string memory _asset,
         bytes32 _leaf,
         bytes32[] memory _proof,
         uint256[] memory _positions,
@@ -111,13 +108,13 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         uint256 _serie
     ) public onlyOwner {
         require(
-            isValidData( _asset, _findRoot(_serie), _leaf, _proof, _positions),
+            isValidData(_asset, _findRoot(_serie), _leaf, _proof, _positions),
             "MerkleMintController:: Not a valid Asset"
         );
         token.mintWithTokenURI(address(this), tokenId, tokenURI);
     }
 
-//Internal function to find the root which accompanies the requested serie. 
+    //Internal function to find the root which accompanies the requested serie.
     function _findRoot(uint256 _serie) internal view returns (bytes32) {
         bytes32 merkleRoot = series[_serie].merkleRoot;
         require(
@@ -127,7 +124,7 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         return merkleRoot;
     }
 
-/**
+    /**
 * @dev Function to add a new IPFS reference to a Serie
 * @param _ipfsHash of the off-chain reference to add to the serie.
 * @param _serieNumber of the Serie the hash should be added to.

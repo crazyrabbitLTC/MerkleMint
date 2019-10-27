@@ -31,7 +31,7 @@ contract("MerkleMintController", async ([sender, secondAddress, ...otherAccounts
     mmController = await MerkleMintController.new();
 
     await mmController.initializeController(mmCore.address);
-    await mmController.addMerkleRoot(series, root, seriesName, ipfsHash);
+    await mmController.addSerie(series, root, seriesName, ipfsHash);
     await mmCore.initialize([mmController.address], [mmController.address]);
   });
 
