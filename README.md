@@ -29,7 +29,7 @@ Disadvantages: For datasets with assets that are large in size, the creation of 
 
 ## Solution 
 
-The creation of a MerkleTree of Signatures. 
+The creation of a MerkleTree of Signatures. (in Progress)
 
 
 
