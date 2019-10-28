@@ -31,17 +31,23 @@
     "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {
+    "@babel/plugin-transform-template-literals": "^7.4.4",
+    "@nomiclabs/buidler": "^1.0.1",
+    "@nomiclabs/buidler-truffle5": "^1.0.1",
+    "@nomiclabs/buidler-web3": "^1.0.1",
     "@openzeppelin/test-helpers": "^0.5.3",
     "chai": "^4.2.0",
     "eth-crypto": "^1.5.0",
     "husky": "^3.0.9",
     "keccak256": "^1.0.0",
     "merkletreejs": "^0.1.7",
+    "mocha": "^6.2.2",
     "prettier": "^1.18.2",
     "prettier-plugin-solidity": "^1.0.0-alpha.34",
     "solhint": "^2.3.0",
     "solhint-plugin-prettier": "0.0.3",
     "solidity-coverage": "^0.6.7",
+    "web3": "^1.2.2",
     "web3-utils": "^1.2.2"
   },
   "husky": {

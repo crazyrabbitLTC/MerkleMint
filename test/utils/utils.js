@@ -21,10 +21,10 @@ const badLeaves = ["love", "emotion", "ethereum"].map(x => keccak256(x), "hex");
 const tree = new MerkleTree(leaves, keccak256);
 const badTree = new MerkleTree(badLeaves, keccak256);
 
-const root = Buffer(tree.getRoot(), "hex");
+const root = Buffer.from(tree.getRoot(), "hex");
 
-const leaf = Buffer(keccak256("love"), "hex");
-const badLeaf = Buffer(keccak256("emotion"), "hex");
+const leaf = Buffer.from(keccak256("love"), "hex");
+const badLeaf = Buffer.from(keccak256("emotion"), "hex");
 
 const proof = tree.getProof(leaf).map(x => buf2hex(x.data));
 const badProof = tree.getProof(badLeaf).map(x => buf2hex(x.data));
