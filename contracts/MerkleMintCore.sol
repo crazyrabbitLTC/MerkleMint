@@ -26,7 +26,12 @@ contract MerkleMintCore is
      * @param minters array of addresses that are allowed to mint.
      * @param pausers array of addresses that are allowed to Pause.
      */
-    function initialize(string memory TokenName, string memory TokenSymbol, address[] memory minters, address[] memory pausers) public initializer {
+    function initialize(
+        string memory TokenName,
+        string memory TokenSymbol,
+        address[] memory minters,
+        address[] memory pausers
+    ) public initializer {
         ERC721.initialize();
         ERC721Enumerable.initialize();
         ERC721Metadata.initialize(TokenName, TokenSymbol);
