@@ -20,6 +20,9 @@ contract("MerkleMintController", async ([sender, secondAddress, ...otherAccounts
   let mmController;
   let mmCore;
 
+  let tokenName = "MerkleMintToken";
+  let tokenSymbol = "MMT";
+
   let tokenId = 1;
   let tokenURI = "Uri Data";
   let series = 1;
@@ -32,15 +35,15 @@ contract("MerkleMintController", async ([sender, secondAddress, ...otherAccounts
 
     await mmController.initializeController(mmCore.address);
     await mmController.addSerie(series, root, seriesName, ipfsHash);
-    await mmCore.initialize([mmController.address], [mmController.address]);
+    await mmCore.initialize(tokenName, tokenSymbol, [mmController.address], [mmController.address]);
   });
 
   it("beforeEach properly deploys the contract", async () => {
     const name = await mmCore.name();
     const symbol = await mmCore.symbol();
 
-    assert.equal(name, "MerkleMintToken");
-    assert.equal(symbol, "MMT");
+    assert.equal(name, tokenName);
+    assert.equal(symbol, tokenSymbol);
   });
 
   it("it can mint a token", async () => {
