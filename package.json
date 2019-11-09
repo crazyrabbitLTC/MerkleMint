@@ -1,6 +1,6 @@
 {
   "name": "merklemint",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tool for Minting NFT on Ethereum with support for Set inclusion checking",
   "main": "index.js",
   "scripts": {
