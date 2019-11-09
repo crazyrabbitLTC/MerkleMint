@@ -6,7 +6,7 @@ A solution to minting non-fungible tokens for items in a) large data sets or b) 
 
 A HeritageDao Research Project: www.heritageDao.com
 
-#QuickStart
+# QuickStart
 
 Requirements: truffle, OpenZeppelin CLI, ganache-cli
 
@@ -20,7 +20,7 @@ To learn how to create a suitable merkle tree, and understand how `MerkleMint` w
 
 Currently `MerkleMint` is based on https://github.com/ameensol/merkle-tree-solidity but I will most likely upgrade it to OpenZeppelin's Merkle Proof library contract in the near future. 
 
-#Installation: 
+# Installation: 
 
 Clone the repo. 
 
@@ -52,7 +52,8 @@ Select the `MerkleMintController` contract and call the `initializeController` f
 
 You now have a working MerkleMint contract. To learn how to mint tokens, look at the `test` folder to see an example of how it is done for testing purposes. 
 
-TODO: Create a useful utility for automating the merkle mint process. 
+# TODO: 
+Create a useful utility for automating the merkle mint process. 
 
 
 
