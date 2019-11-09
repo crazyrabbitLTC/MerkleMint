@@ -1,10 +1,10 @@
 {
   "name": "merklemint",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Tool for Minting NFT on Ethereum with support for Set inclusion checking",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "truffle test",
     "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
     "coverage": "./node_modules/.bin/solidity-coverage",
     "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**.sol"
@@ -27,7 +27,6 @@
     "@openzeppelin/contracts-ethereum-package": "^2.3.0",
     "@openzeppelin/upgrades": "^2.5.3",
     "dotenv": "^8.2.0",
-    "openzeppelin-test-helpers": "^0.5.1",
     "truffle-contract-size": "^1.0.1",
     "truffle-hdwallet-provider": "^1.0.17",
     "truffle-security": "^1.6.1"
@@ -44,6 +43,7 @@
     "keccak256": "^1.0.0",
     "merkletreejs": "^0.1.7",
     "mocha": "^6.2.2",
+    "openzeppelin-test-helpers": "^0.5.1",
     "prettier": "^1.18.2",
     "prettier-plugin-solidity": "^1.0.0-alpha.34",
     "solhint": "^2.3.0",
