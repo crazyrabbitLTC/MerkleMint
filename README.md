@@ -6,6 +6,56 @@ A solution to minting non-fungible tokens for items in a) large data sets or b) 
 
 A HeritageDao Research Project: www.heritageDao.com
 
+#QuickStart
+
+Requirements: truffle, OpenZeppelin CLI, ganache-cli
+
+Currently (v0.0.1) the project is designed to create a free-standing ERC-721 token (`MerkleMintCore.sol`). This contract is designed to be upgradable and used with the OpenZeppelin CLI/SDK system. However in the future I will include `truffle migrations` so that it will work with `truffle deploy` as well. 
+
+`MerkleMintCore.sol` : This is a full featured ERC-721 token based on OpenZeppelin Contracts library. There have been no changes to the OpenZeppelin code and `MerkleMintCore.sol` if deployed will create a full featured ERC-721 token. 
+
+`MerkleMintController.sol` : When assigned a minter-role for `MerkleMintCore.sol` this contract will mint tokens only when they have been found to exist in a registered Serie. Series are collections of counterfactually mintable tokens. Each Serie has a merkleroot saved in a `struct` which is checked against each time the contract is requested to mint a token. 
+
+To learn how to create a suitable merkle tree, and understand how `MerkleMint` works, please see the `test` folder and inspect `MerkleMintController.js`. 
+
+Currently `MerkleMint` is based on https://github.com/ameensol/merkle-tree-solidity but I will most likely upgrade it to OpenZeppelin's Merkle Proof library contract in the near future. 
+
+#Installation: 
+
+Clone the repo. 
+
+`npm install`
+
+The project uses OpenZeppelin CLI. 
+
+Deploy `MerkleMintController.sol` first.
+
+`oz create`
+
+Select `MerkleMintController` Do not run the `initializeController` function (we will do that once we know the address of our token).
+
+Now deploy `MerkleMintCore.sol`. Copy the address of the deployed contract, we will need it to deploy our token. 
+
+`oz create`
+
+Select `MerkleMintCore.sol` and when it prompts you if you wish to run a function select: `initalize`.
+
+Use the addresses of `MerkleMintController` and any other address you with to have persmission to `mint` and `pause` the token contract, and enter them as an array at the command prompt for both `minters` and `pausers`.
+
+For the prompts `name` and `symbol`, enter whatever you choose. Save the address returned of the `MerkleMintCore.sol` file. We will need it to link the contracts. 
+
+Now you need to link `MerkleMintController.sol` to `MerkleMintCore.sol`. 
+
+Run `oz send-tx`
+
+Select the `MerkleMintController` contract and call the `initializeController` function with the address of `MerkleMintCore.sol` as the argument. 
+
+You now have a working MerkleMint contract. To learn how to mint tokens, look at the `test` folder to see an example of how it is done for testing purposes. 
+
+TODO: Create a useful utility for automating the merkle mint process. 
+
+
+
 
 #Problem
 The Heritage Dao needs to mint non-fungible tokens representing photographic assets in it's collection. Because the collection is so large, it should only be required to mint an assets token when absolutely nessesary, rather than minting all of them in advance. The idea being that the possiblity to mint an item, for an item that is not currently in use, is as good as actually having minted the item itself. 
