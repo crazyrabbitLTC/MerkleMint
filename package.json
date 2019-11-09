@@ -28,7 +28,9 @@
     "@openzeppelin/upgrades": "^2.5.3",
     "dotenv": "^8.2.0",
     "openzeppelin-test-helpers": "^0.5.1",
-    "truffle-hdwallet-provider": "^1.0.17"
+    "truffle-contract-size": "^1.0.1",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "truffle-security": "^1.6.1"
   },
   "devDependencies": {
     "@babel/plugin-transform-template-literals": "^7.4.4",
