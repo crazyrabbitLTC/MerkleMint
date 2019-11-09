@@ -58,7 +58,7 @@ Create a useful utility for automating the merkle mint process.
 
 
 
-#Problem
+# The Problem
 The Heritage Dao needs to mint non-fungible tokens representing photographic assets in it's collection. Because the collection is so large, it should only be required to mint an assets token when absolutely nessesary, rather than minting all of them in advance. The idea being that the possiblity to mint an item, for an item that is not currently in use, is as good as actually having minted the item itself. 
 
 To solve this a number of solutions were investigated, the two favorable solutions are: Signature Recovery and MerkleProofs, but both indiviuall have drawbacks. MerkleMint will show that the solution is a combination of the two techniques. 
