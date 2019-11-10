@@ -33,6 +33,7 @@
         "eslint-plugin-import": "^2.18.2",
         "ethereumjs-util": "^6.2.0",
         "husky": "^3.0.9",
+        "lint-staged": "^9.4.2",
         "prettier": "^1.19.1",
         "prettier-plugin-solidity": "^1.0.0-alpha.34",
         "solhint": "^2.3.0",
@@ -42,8 +43,17 @@
     "eslintConfig": {},
     "husky": {
         "hooks": {
-            "pre-push": "npm run prettier:solidity",
-            "pre-commit": "pretty-quick --staged"
+            "pre-push": "npm run prettier:solidity"
         }
+    },
+    "lint-staged": {
+        "*.{js,css,json,md}": [
+            "prettier --write",
+            "git add"
+        ],
+        "*.js": [
+            "eslint --fix",
+            "git add"
+        ]
     }
 }
