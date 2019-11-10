@@ -18,7 +18,7 @@ Currently (v0.0.1) the project is designed to create a free-standing ERC-721 tok
 
 To learn how to create a suitable merkle tree, and understand how `MerkleMint` works, please see the `test` folder and inspect `MerkleMintController.js`. 
 
-UPDATE: The projecct now uses OpenZeppelin's MerkleProof library. 
+UPDATE: The project now uses OpenZeppelin's MerkleProof library. 
 ~~Currently `MerkleMint` is based on https://github.com/ameensol/merkle-tree-solidity but I will most likely upgrade it to OpenZeppelin's Merkle Proof library contract in the near future.~~
 
 # Installation: 
