@@ -1,16 +1,7 @@
 {
   "manifestVersion": "2.2",
-  "contracts": {
-    "MerkleMintCore": "MerkleMintCore"
-  },
+  "contracts": {},
   "dependencies": {},
   "name": "merklemint",
-  "version": "1.0.0",
-  "compiler": {
-    "manager": "openzeppelin",
-    "solcVersion": "0.5.12",
-    "compilerSettings": {
-      "optimizer": {}
-    }
-  }
+  "version": "0.0.2"
 }
