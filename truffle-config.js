@@ -1,5 +1,7 @@
 const path = require("path");
 require("dotenv").config();
+require('babel-register');
+require('babel-polyfill');
 const mnemonic = "memonic";
 const infuraKey =
   process.env.INFURA_API_KEY || "d6760e62b67f4937ba1ea2691046f06d";
