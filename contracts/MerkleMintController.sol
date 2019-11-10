@@ -89,11 +89,10 @@ contract MerkleMintController is Initializable, Ownable, Verify {
 
     /**
     * @dev Mint a new Asset (ERC721 Token)
-    * @param _asset the intended asset token to mint.
+    * @param _asset the intended asset token to mint. This is also the TokensURI
     * @param _leaf required for the merkleproof.
     * @param _proof provided for verification.
     * @param tokenId of the asset token requested to mint. (TODO: Connect this to the minting process)
-    * @param tokenURI the metadata for the asset token.
     * @param _serie that the merkleproof should check against.
     * @return MerkleMintCore will mint a token and emit an event.
     */
@@ -102,14 +101,13 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         bytes32 _leaf,
         bytes32[] memory _proof,
         uint256 tokenId,
-        string memory tokenURI,
         uint256 _serie
     ) public onlyOwner {
         require(
             isValidData(_asset, _findRoot(_serie), _leaf, _proof),
             "MerkleMintController:: Not a valid Asset"
         );
-        token.mintWithTokenURI(address(this), tokenId, tokenURI);
+        token.mintWithTokenURI(address(this), tokenId, _asset);
     }
 
     //Internal function to find the root which accompanies the requested serie.

@@ -1,43 +1,49 @@
 {
-  "name": "merklemint",
-  "version": "0.0.2",
-  "description": "A solution for counterfactually minting tokens on ethereum",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
-    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**.sol"
-  },
-  "author": "Dennison Bertram (www.dennisonbertram.com)",
-  "license": "MIT",
-  "dependencies": {
-    "@babel/core": "^7.7.2",
-    "@openzeppelin/contracts": "^2.4.0",
-    "@openzeppelin/contracts-ethereum-package": "^2.3.0",
-    "@openzeppelin/test-helpers": "^0.5.3",
-    "@openzeppelin/upgrades": "^2.5.3",
-    "eth-crypto": "^1.5.0",
-    "keccak256": "^1.0.0",
-    "merkle-tree-solidity": "^1.0.8",
-    "openzeppelin-test-helpers": "^0.5.1"
-  },
-  "devDependencies": {
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-stage-2": "^6.24.1",
-    "babel-preset-stage-3": "^6.17.0",
-    "babel-register": "^6.23.0",
-    "eslint": "^6.6.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2",
-    "ethereumjs-util": "^6.2.0",
-    "husky": "^3.0.9",
-    "prettier": "^1.19.1",
-    "prettier-plugin-solidity": "^1.0.0-alpha.34",
-    "solhint": "^2.3.0",
-    "solhint-plugin-prettier": "0.0.3",
-    "standard": "^14.3.1"
-  },
-  "eslintConfig": {}
+    "name": "merklemint",
+    "version": "0.0.2",
+    "description": "A solution for counterfactually minting tokens on ethereum",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
+        "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**.sol"
+    },
+    "author": "Dennison Bertram (www.dennisonbertram.com)",
+    "license": "MIT",
+    "dependencies": {
+        "@babel/core": "^7.7.2",
+        "@openzeppelin/contracts": "^2.4.0",
+        "@openzeppelin/contracts-ethereum-package": "^2.3.0",
+        "@openzeppelin/test-helpers": "^0.5.3",
+        "@openzeppelin/upgrades": "^2.5.3",
+        "eth-crypto": "^1.5.0",
+        "keccak256": "^1.0.0",
+        "merkle-tree-solidity": "^1.0.8",
+        "openzeppelin-test-helpers": "^0.5.1"
+    },
+    "devDependencies": {
+        "babel-polyfill": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-es2015": "^6.18.0",
+        "babel-preset-stage-2": "^6.24.1",
+        "babel-preset-stage-3": "^6.17.0",
+        "babel-register": "^6.23.0",
+        "eslint": "^6.6.0",
+        "eslint-config-airbnb-base": "^14.0.0",
+        "eslint-plugin-import": "^2.18.2",
+        "ethereumjs-util": "^6.2.0",
+        "husky": "^3.0.9",
+        "prettier": "^1.19.1",
+        "prettier-plugin-solidity": "^1.0.0-alpha.34",
+        "solhint": "^2.3.0",
+        "solhint-plugin-prettier": "0.0.3",
+        "standard": "^14.3.1"
+    },
+    "eslintConfig": {},
+    "husky": {
+        "hooks": {
+            "pre-push": "npm run prettier:solidity",
+            "pre-commit": "pretty-quick --staged"
+        }
+    }
 }
