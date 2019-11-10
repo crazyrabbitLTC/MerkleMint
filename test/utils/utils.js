@@ -14,7 +14,9 @@ const signWord = async (word, privateKey) => {
   }
 };
 
-const leaves = ["love", "happiness", "ethereum"].map(x => keccak256(x), "hex");
+// const leaves = ["love", "happiness", "ethereum"].map(x => keccak256(x), "hex");
+
+const leaves = ["love", "happiness", "ethereum"].map(x => EthCrypto.hash.keccak256(x));
 
 const badLeaves = ["love", "emotion", "ethereum"].map(x => keccak256(x), "hex");
 
@@ -29,13 +31,9 @@ const badLeaf = Buffer.from(keccak256("emotion"), "hex");
 const proof = tree.getProof(leaf).map(x => buf2hex(x.data));
 const badProof = tree.getProof(badLeaf).map(x => buf2hex(x.data));
 
-const positions = tree
-  .getProof(leaf)
-  .map(x => (x.position === "right" ? 1 : 0));
+const positions = tree.getProof(leaf).map(x => (x.position === "right" ? 1 : 0));
 
-const badPositions = badTree
-  .getProof(badLeaf)
-  .map(x => (x.position === "right" ? 1 : 0));
+const badPositions = badTree.getProof(badLeaf).map(x => (x.position === "right" ? 1 : 0));
 
 const validWord = "love";
 const invalidWord = "diabolical";

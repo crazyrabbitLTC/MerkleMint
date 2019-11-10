@@ -27,6 +27,7 @@
     "@openzeppelin/contracts-ethereum-package": "^2.3.0",
     "@openzeppelin/upgrades": "^2.5.3",
     "dotenv": "^8.2.0",
+    "merkle-tree-solidity": "^1.0.8",
     "truffle-contract-size": "^1.0.1",
     "truffle-hdwallet-provider": "^1.0.17",
     "truffle-security": "^1.6.1"
