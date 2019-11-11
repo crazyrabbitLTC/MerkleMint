@@ -1,14 +1,16 @@
+const { getFileType } = require("./utils/getFileType")
+
+const { extractEXIF } = require("./utils/extractEXIF")
 
 const fs = require("fs")
 const path = require("path")
-const fileType = require("file-type")
-const readChunk = require("read-chunk")
-const Parser = require("exif-parser")
 const uuidv4 = require("uuid/v4")
 const {config} = require("./config")
 const web3 = require("web3")
 const {MerkleTree} = require("./utils/merkleTree")
 const { keccak256, bufferToHex } = require('ethereumjs-util');
+const { openSea, cmoa, exif, imageInfo, artist, chainData, dao } = require('./exampleMetaData');
+
 
 const start = async () => {
     //Get Directory Contents
@@ -23,16 +25,22 @@ const start = async () => {
         return config.imageTypes.includes(getFileType(file.filePath).ext)
     })
 
-    const filesWithExif = validFiles.map(fileObj => {
+    const filesWithMetaData = validFiles.map(fileObj => {
         return {
             ...fileObj,
+            ...openSea,
             data: {
                 exif: extractEXIF(fileObj),
+                cmoa: [],
+                imageInfo: [],
+                artist: [],
+                chainData: [],
+                dao: []
             },
         }
     })
 
-    const filesWithHash = filesWithExif.map(fileObj => {
+    const filesWithHash = filesWithMetaData.map(fileObj => {
         const id = uuidv4()
         return {
             ...fileObj,
@@ -47,7 +55,7 @@ const start = async () => {
 
     const root = merkleTree.getHexRoot();
 
-    const proofs = filesWithHash.map(fileObj => {
+    const filesWithProofs = filesWithHash.map(fileObj => {
       return {
         ...fileObj,
         merkleProof: {
@@ -58,27 +66,8 @@ const start = async () => {
       }
     })
 
-    console.log(proofs)
+    console.log(JSON.stringify(filesWithProofs, null, 4))
 
-}
-
-function getFileType(file) {
-    let example = {ext: null, mime: null}
-    return fileType(readChunk.sync(file, 0, fileType.minimumBytes)) || example
-}
-
-function extractEXIF(imageFile, exifData = {}) {
-    const parser = Parser.create(fs.readFileSync(imageFile.filePath))
-
-    try {
-        exifData = {...imageFile, exif: {...parser.parse()}}
-    } catch (err) {
-        // got invalid data, handle error
-        console.log(err)
-        return exifData
-    }
-
-    return exifData
 }
 
 start()

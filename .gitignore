@@ -65,3 +65,6 @@ typings/
 # sample image folder
 
 sampleImages
+
+# truffle build directory
+build
