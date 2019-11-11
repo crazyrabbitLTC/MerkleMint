@@ -1,7 +1,16 @@
 {
   "manifestVersion": "2.2",
-  "contracts": {},
+  "contracts": {
+    "MerkleMintController": "MerkleMintController",
+    "MerkleMintCore": "MerkleMintCore"
+  },
   "dependencies": {},
   "name": "merklemint",
-  "version": "0.0.2"
+  "version": "0.0.2",
+  "compiler": {
+    "manager": "truffle",
+    "compilerSettings": {
+      "optimizer": {}
+    }
+  }
 }
