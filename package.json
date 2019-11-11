@@ -1,6 +1,6 @@
 {
     "name": "merklemint",
-    "version": "0.0.3",
+    "version": "0.0.3bo",
     "description": "A solution for counterfactually minting tokens on ethereum",
     "main": "index.js",
     "scripts": {

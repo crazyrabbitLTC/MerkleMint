@@ -8,6 +8,7 @@ const {MerkleTree} = require("./utils/merkleTree")
 const {keccak256, bufferToHex} = require("ethereumjs-util")
 const {openSea} = require("./exampleMetaData")
 const {sendMetaDataToIPFS, sendFilesToIPFS} = require("./utils/ipfsUpload")
+const {copyFromExif} = require("./utils/copyFromExif");
 
 const start = async () => {
     //Get Directory Contents
@@ -37,7 +38,15 @@ const start = async () => {
         }
     })
 
-    const filesWithHash = await sendFilesToIPFS(filesWithMetaData)
+    const copyDataFromExif = filesWithMetaData.map(fileObj => {
+      return {
+        ...fileObj,
+        ...(copyFromExif(fileObj, config)),
+      }
+    })
+
+
+    const filesWithHash = await sendFilesToIPFS(copyDataFromExif)
 
     const fileMetaDataWithIPFSHash = await sendMetaDataToIPFS(filesWithHash)
 
