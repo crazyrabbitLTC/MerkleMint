@@ -23,7 +23,9 @@ const start = async () => {
 
     const fileMetaDataWithIPFSHash = await sendMetaDataToIPFS(filesWithHash)
 
-    const merkleTree = new MerkleTree(fileMetaDataWithIPFSHash.map(fileObj => fileObj.id.tokenURI))
+    const leavesForTree = fileMetaDataWithIPFSHash.map(fileObj => fileObj.id.tokenURI)
+
+    const merkleTree = new MerkleTree(leavesForTree)
 
     const root = merkleTree.getHexRoot()
 
@@ -38,14 +40,25 @@ const start = async () => {
         }
     })
 
+    const justTheMerkleTree = filesWithProofs.map(obj => {
+        return {
+            tokenId: obj.tokenId,
+            tokenURI: obj.id.tokenURI,
+            hashOfURI: obj.id.hashURI,
+            ...obj.merkleProof,
+        }
+    })
     console.log(JSON.stringify(filesWithProofs, null, 4))
 
-fs.writeFileSync(path.join(config.path, "output.json"), JSON.stringify(filesWithProofs))
+    const bundle = {serie: config.serieNumber, assets: [...filesWithProofs]}
 
+    fs.writeFileSync(path.join(config.path, "output.json"), JSON.stringify(bundle, null, 4))
+    fs.writeFileSync(
+        path.join(config.path, "treeData.json"),
+        JSON.stringify({serie: config.serieNumber, assets: [...justTheMerkleTree]}, null, 4),
+    )
 
     process.exit(0)
 }
 
 start()
-
-
