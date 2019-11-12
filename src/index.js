@@ -1,52 +1,25 @@
 require("dotenv").config()
-const {getFileType} = require("./utils/getFileType")
-const {extractEXIF} = require("./utils/extractEXIF")
+
 const fs = require("fs")
 const path = require("path")
 const {config} = require("./config")
 const {MerkleTree} = require("./utils/merkleTree")
 const {keccak256, bufferToHex} = require("ethereumjs-util")
-const {openSea} = require("./exampleMetaData")
 const {sendMetaDataToIPFS, sendFilesToIPFS} = require("./utils/ipfsUpload")
-const {copyFromExif} = require("./utils/copyFromExif");
+const {prepareFiles} = require("./utils/prepareFiles")
 
 const start = async () => {
     //Get Directory Contents
-    const files = fs
+    const sourceFiles = fs
         .readdirSync(config.path)
         .filter(file => fs.statSync(path.join(config.path, file)).isFile())
         .map(file => {
             return {fileName: file, filePath: path.join(config.path, file)}
         })
 
-    const validFiles = files.filter(file => {
-        return config.imageTypes.includes(getFileType(file.filePath).ext)
-    })
+    const preparedFiles = prepareFiles(sourceFiles, config)
 
-    const filesWithMetaData = validFiles.map(fileObj => {
-        return {
-            ...fileObj,
-            ...openSea,
-            data: {
-                exif: extractEXIF(fileObj),
-                cmoa: [],
-                imageInfo: [],
-                artist: [],
-                chainData: [],
-                dao: [],
-            },
-        }
-    })
-
-    const copyDataFromExif = filesWithMetaData.map(fileObj => {
-      return {
-        ...fileObj,
-        ...(copyFromExif(fileObj, config)),
-      }
-    })
-
-
-    const filesWithHash = await sendFilesToIPFS(copyDataFromExif)
+    const filesWithHash = await sendFilesToIPFS(preparedFiles)
 
     const fileMetaDataWithIPFSHash = await sendMetaDataToIPFS(filesWithHash)
 
@@ -66,9 +39,13 @@ const start = async () => {
     })
 
     console.log(JSON.stringify(filesWithProofs, null, 4))
-    fs.writeFileSync(path.join(config.path, "output.json"), JSON.stringify(filesWithProofs))
+
+fs.writeFileSync(path.join(config.path, "output.json"), JSON.stringify(filesWithProofs))
+
 
     process.exit(0)
 }
 
 start()
+
+
