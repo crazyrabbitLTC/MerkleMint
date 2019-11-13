@@ -18,7 +18,7 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     MerkleMintCore public token;
 
     //Struct that defines a Serie
-//ToDO: Add a count of how many images are in a series
+    //ToDO: Add a count of how many images are in a series
     struct Serie {
         bytes32 merkleRoot;
         bytes32[] ipfsHash;

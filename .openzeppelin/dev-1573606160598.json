@@ -1,11 +1,11 @@
 {
   "contracts": {
     "MerkleMintController": {
-      "address": "0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab",
-      "constructorCode": "60806040526118fa806100136000396000f3fe",
-      "bodyBytecodeHash": "3ef7ab48ec792f11bbcd6eb0a5641b4f0ea6b6ba1f29da9033b78d5d098641cc",
-      "localBytecodeHash": "681f60ef3b58b66e35b05b793876499cd3e4fea4440b1243a0f5fe71f3ed2eb3",
-      "deployedBytecodeHash": "681f60ef3b58b66e35b05b793876499cd3e4fea4440b1243a0f5fe71f3ed2eb3",
+      "address": "0xe982E462b094850F12AF94d21D470e21bE9D0E9C",
+      "constructorCode": "608060405261191b806100136000396000f3fe",
+      "bodyBytecodeHash": "79f36eeb34d1a31b05a16c1d0888c352b293fbfff1d3381e0f58f2a88d3d75e3",
+      "localBytecodeHash": "e8962915adc14159c110312eac372014120a3cbea3e1798b08ab6e333fd6c853",
+      "deployedBytecodeHash": "e8962915adc14159c110312eac372014120a3cbea3e1798b08ab6e333fd6c853",
       "types": {
         "t_bool": {
           "id": "t_bool",
@@ -38,25 +38,25 @@
               "label": "merkleRoot",
               "astId": 15,
               "type": "t_bytes32",
-              "src": "1077:18:0"
+              "src": "1136:18:0"
             },
             {
               "label": "ipfsHash",
               "astId": 18,
               "type": "t_array:dyn<t_bytes32>",
-              "src": "1105:18:0"
+              "src": "1164:18:0"
             },
             {
               "label": "serieName",
               "astId": 20,
               "type": "t_string",
-              "src": "1133:16:0"
+              "src": "1192:16:0"
             },
             {
               "label": "seriesID",
               "astId": 22,
               "type": "t_uint256",
-              "src": "1159:16:0"
+              "src": "1218:16:0"
             }
           ]
         },
@@ -89,7 +89,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
           "label": "initialized",
-          "astId": 2823,
+          "astId": 2824,
           "type": "t_bool",
           "src": "757:24:25"
         },
@@ -97,7 +97,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
           "label": "initializing",
-          "astId": 2825,
+          "astId": 2826,
           "type": "t_bool",
           "src": "876:25:25"
         },
@@ -105,7 +105,7 @@
           "contract": "Initializable",
           "path": "@openzeppelin/upgrades/contracts/Initializable.sol",
           "label": "______gap",
-          "astId": 2881,
+          "astId": 2882,
           "type": "t_array:50<t_uint256>",
           "src": "1951:29:25"
         },
@@ -113,7 +113,7 @@
           "contract": "Ownable",
           "path": "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol",
           "label": "_owner",
-          "astId": 1234,
+          "astId": 1235,
           "type": "t_address",
           "src": "526:22:14"
         },
@@ -121,7 +121,7 @@
           "contract": "Ownable",
           "path": "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol",
           "label": "______gap",
-          "astId": 1347,
+          "astId": 1348,
           "type": "t_array:50<t_uint256>",
           "src": "2471:29:14"
         },
@@ -139,7 +139,7 @@
           "label": "series",
           "astId": 27,
           "type": "t_mapping<t_struct<MerkleMintController.Serie>>",
-          "src": "1221:39:0"
+          "src": "1280:39:0"
         }
       ],
       "warnings": {
@@ -147,7 +147,18 @@
         "hasSelfDestruct": false,
         "hasDelegateCall": false,
         "hasInitialValuesInDeclarations": false,
-        "uninitializedBaseContracts": []
+        "uninitializedBaseContracts": [],
+        "storageUncheckedVars": [
+          {
+            "contract": "MerkleMintController",
+            "path": "contracts/MerkleMintController.sol",
+            "label": "series",
+            "astId": 27,
+            "type": "t_mapping<t_struct<MerkleMintController.Serie>>",
+            "src": "1280:39:0"
+          }
+        ],
+        "storageDiff": []
       }
     },
     "MerkleMintCore": {
@@ -497,6 +508,20 @@
         "address": "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550",
         "version": "0.0.2",
         "implementation": "0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab",
+        "admin": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
+        "kind": "Upgradeable"
+      },
+      {
+        "address": "0x59d3631c86BbE35EF041872d502F218A39FBa150",
+        "version": "0.0.2",
+        "implementation": "0xe982E462b094850F12AF94d21D470e21bE9D0E9C",
+        "admin": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
+        "kind": "Upgradeable"
+      },
+      {
+        "address": "0x2612Af3A521c2df9EAF28422Ca335b04AdF3ac66",
+        "version": "0.0.2",
+        "implementation": "0xe982E462b094850F12AF94d21D470e21bE9D0E9C",
         "admin": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
         "kind": "Upgradeable"
       }

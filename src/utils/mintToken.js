@@ -1,60 +1,78 @@
-const Web3 = require("web3")
-const web3 = new Web3("ws://127.0.0.1:8545")
+// const Web3 = require("web3")
+// const web3 = new Web3("ws://127.0.0.1:8545")
 
-const tokenArtifact = "/Users/dennison/Documents/MerkleMint/build/contracts/MerkleMintCore.json"
-const controllerArtifact =
-    "/Users/dennison/Documents/MerkleMint/build/contracts/MerkleMintController.json"
+global.artifacts = artifacts
+global.web3 = web3
 
-const tokenAddress = "0x254dffcd3277C0b1660F6d42EFbB754edaBAbC2B"
-const controllerAddress = "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550"
+const {Contracts, SimpleProject, ZWeb3} = require("@openzeppelin/upgrades")
 
-const loadContract = async (contractPath, address) => {
-    let contract
-    try {
-        contract = require(contractPath)
-        contract = new web3.eth.Contract(contract.abi)
-    } catch (error) {
-        throw new Error("Problem loading Contract: ", error)
-    }
-
-    return contract
+const token = {
+    name: "TestToken",
+    symbol: "TT",
 }
 
-const setContractAddress = async (contractObj, address) => {
-    contractObj.options.address = address
+async function main() {
+    ZWeb3.initialize(web3.currentProvider)
 
-    return contractObj
+    const MerkleMintCore = Contracts.getFromLocal("MerkleMintCore")
+    const MerkleMintController = Contracts.getFromLocal("MerkleMintController")
+
+    const [creatorAddress, initializerAddress, additionalMinter] = await ZWeb3.accounts()
+
+    const MerkleMint = new SimpleProject("MerkleMint", null, {from: creatorAddress})
+
+    const MMCoreInstance = await MerkleMint.createProxy(MerkleMintCore, {
+        initArgs: [token.name, token.symbol, [initializerAddress], [initializerAddress]],
+    })
+    const MMControllerInstance = await MerkleMint.createProxy(MerkleMintController)
+
+    //Add MMController as Minter
+    await MMCoreInstance.methods
+        .addMinter(MMControllerInstance.address)
+        .send({from: initializerAddress, gas: 1500000, gasPrice: "30000000000000"})
+
+    console.log(
+        "Is MMController minter?",
+        await MMCoreInstance.methods
+            .isMinter(MMControllerInstance.address)
+            .call({from: additionalMinter}),
+    )
+
+    //Add Token address to MMController
+    await MMControllerInstance.methods
+        .initializeController(MMCoreInstance.address)
+        .send({from: initializerAddress, gas: 1500000, gasPrice: "30000000000000"})
+
+    console.log(
+        "MMController Owner: ",
+        await MMControllerInstance.methods.owner().call({from: initializerAddress}),
+        "Initialzier: ",
+        initializerAddress,
+    )
+
+    const {assets} = require("../../sampleImages/treeData.json")
+    const {tokenId, tokenURI, hashOfURI, root, leaf, proof} = assets[0]
+    const serieName = "Series 1"
+    const serieNumber = 0
+
+    await MMControllerInstance.methods
+        .addSerie(serieNumber, root, serieName, hashOfURI)
+        .send({from: initializerAddress, gas: 1500000, gasPrice: "30000000000000"})
+
+      //console.log("TokenURI of 0: ", await MMCoreInstance.methods.tokenURI(0).call({from: initializerAddress}))
+
+    await MMControllerInstance.methods.mintAsset(
+      tokenURI, leaf, proof, tokenId, serieNumber
+    ).send({from: initializerAddress, gas: 1500000, gasPrice: "30000000000000"})
+    console.log("TokenURI of 0: ", await MMCoreInstance.methods.tokenURI(0).call({from: initializerAddress}))
+
+
+    console.log("MMController Info: ", MMControllerInstance.address)
 }
 
-const callTokenName = async instance => {
-    let name = await instance.methods.symbol().call()
-    console.log(name)
+// For truffle exec
+module.exports = function(callback) {
+    main()
+        .then(() => callback())
+        .catch(err => callback(err))
 }
-
-const createSerie = async instance => {
-
-  let accounts = await web3.eth.getAccounts();
-
-  let root = "0x8db8a3dd20425d764b7a6741e9c514486f4130c5821eada49868040a7dfd7174"
-  let serieName = "First Series"
-  let serieNumber = 0
-  let ipfsHash = "0x23f7ccaf4b729962d9f37258163e3cae45dd80226f9aa6969c1f0568d6008c09"
-
-
-  let tx = await instance.methods.addSerie(serieNumber, root, serieName, ipfsHash).send({from: accounts[0]});
-
-  
-  return tx;
-}
-
-// loadContract("/Users/dennison/Documents/MerkleMint/build/contracts/MerkleMintCore.json")
-//     .then(x => {
-//         return setContractAddress(x, tokenAddress)
-//     })
-//     .then(x => callTokenName(x))
-
-loadContract(controllerArtifact).then(contract => {
-    return setContractAddress(contract, controllerAddress)
-}).then(instance => {
-  return createSerie(instance)
-}).then(x => console.log(x))
