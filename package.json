@@ -17,6 +17,7 @@
         "@openzeppelin/test-helpers": "^0.5.3",
         "@openzeppelin/upgrades": "^2.5.3",
         "@truffle/hdwallet-provider": "^1.0.25",
+        "aws-sdk": "^2.572.0",
         "dotenv": "^8.2.0",
         "eth-crypto": "^1.5.0",
         "exif-parser": "^0.1.12",

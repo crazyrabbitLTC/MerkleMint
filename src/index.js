@@ -7,6 +7,7 @@ const {MerkleTree} = require("./utils/merkleTree")
 const {keccak256, bufferToHex} = require("ethereumjs-util")
 const {sendMetaDataToIPFS, sendFilesToIPFS} = require("./utils/ipfsUpload")
 const {prepareFiles} = require("./utils/prepareFiles")
+const {uploadMultipleFiles} = require("./utils/S3")
 
 const start = async () => {
     //Get Directory Contents
@@ -21,7 +22,9 @@ const start = async () => {
 
     const filesWithHash = await sendFilesToIPFS(preparedFiles)
 
-    const fileMetaDataWithIPFSHash = await sendMetaDataToIPFS(filesWithHash)
+    const filesUploadedToS3 = await uploadMultipleFiles(filesWithHash)
+
+    const fileMetaDataWithIPFSHash = await sendMetaDataToIPFS(filesUploadedToS3)
 
     const leavesForTree = fileMetaDataWithIPFSHash.map(fileObj => fileObj.id.tokenURI)
 
