@@ -2,12 +2,13 @@ require("dotenv").config()
 
 const fs = require("fs")
 const path = require("path")
-const {config} = require("./config")
-const {MerkleTree} = require("./utils/merkleTree")
-const {keccak256, bufferToHex} = require("ethereumjs-util")
-const {sendMetaDataToIPFS, sendFilesToIPFS} = require("./utils/ipfsUpload")
-const {prepareFiles} = require("./utils/prepareFiles")
-const {uploadMultipleFiles} = require("./utils/S3")
+const { config } = require("./config")
+const { MerkleTree } = require("./utils/merkleTree")
+const { keccak256, bufferToHex } = require("ethereumjs-util")
+const { sendMetaDataToIPFS, sendFilesToIPFS } = require("./utils/ipfsUpload")
+const { prepareFiles } = require("./utils/prepareFiles")
+const { uploadMultipleFiles } = require("./utils/S3")
+const { sendToWebFlow } = require("./utils/webFlow")
 
 const start = async () => {
     //Get Directory Contents
@@ -15,7 +16,7 @@ const start = async () => {
         .readdirSync(config.path)
         .filter(file => fs.statSync(path.join(config.path, file)).isFile())
         .map(file => {
-            return {fileName: file, filePath: path.join(config.path, file)}
+            return { fileName: file, filePath: path.join(config.path, file) }
         })
 
     const preparedFiles = prepareFiles(sourceFiles, config)
@@ -43,6 +44,8 @@ const start = async () => {
         }
     })
 
+    const webflow = await sendToWebFlow(filesWithProofs, "Merklemints")
+
     const justTheMerkleTree = filesWithProofs.map(obj => {
         return {
             tokenId: obj.tokenId,
@@ -51,14 +54,14 @@ const start = async () => {
             ...obj.merkleProof,
         }
     })
-    console.log(JSON.stringify(filesWithProofs, null, 4))
 
-    const bundle = {serie: config.serieNumber, assets: [...filesWithProofs]}
+
+    const bundle = { serie: config.serieNumber, assets: [...filesWithProofs] }
 
     fs.writeFileSync(path.join(config.path, "output.json"), JSON.stringify(bundle, null, 4))
     fs.writeFileSync(
         path.join(config.path, "treeData.json"),
-        JSON.stringify({serie: config.serieNumber, assets: [...justTheMerkleTree]}, null, 4),
+        JSON.stringify({ serie: config.serieNumber, assets: [...justTheMerkleTree] }, null, 4),
     )
 
     process.exit(0)

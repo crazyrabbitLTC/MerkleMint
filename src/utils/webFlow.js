@@ -21,6 +21,36 @@ const _RequiredData = {
     _draft: false,
 }
 
+const sendToWebFlow = async (fileObjs, collectionName) => {
+
+
+    const collections = await getAllCollections()
+    const cms = await selectCMS(collections, collectionName)
+
+    for (const item of fileObjs) {
+        const data = {
+            name: `slug-${item.fileName.slice(0,-4)}`, 
+            slug: (Date.now()).toString(),
+            tokenid: item.tokenId,
+            tokenuri: item.image,
+            leaf: item.merkleProof.leaf,
+            root: item.merkleProof.root,
+            proof: JSON.stringify(item.merkleProof.proof),
+            tokenmetadata: "item",
+            imgipfs: item.id.hash,
+            image: item.s3_URL,
+        }
+        
+
+        try {
+            const result = await uploadToCMS(cms, data)
+            console.log(result)
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+}
+
 const getAllCollections = async (siteId = _SiteID) => {
     const array = await webflow.collections({ siteId })
     return array
@@ -44,20 +74,23 @@ const getCMSById = async collectionId => {
 const uploadToCMS = async (collection, data = defaultData, requiredData = _RequiredData) => {
     const collectionId = collection._id
 
+    const fields = {
+      ...requiredData,
+      ...data,
+    }
+console.log("collectionID", collectionId)
+    console.log(JSON.stringify(fields, null, 4));
     return await webflow.createItem({
         collectionId,
-        fields: {
-            ...requiredData,
-            ...data,
-        },
+        fields,
     })
 }
 
-getAllCollections()
-    .then(x => {
-        return selectCMS(x, "Merklemints")
-    })
-    .then(x => uploadToCMS(x))
-    .then(x => console.log(x))
+// getAllCollections()
+//     .then(x => {
+//         return selectCMS(x, "Merklemints")
+//     })
+//     .then(x => uploadToCMS(x))
+//     .then(x => console.log(x))
 
-module.exports = {}
+module.exports = { sendToWebFlow }
