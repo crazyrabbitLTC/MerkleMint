@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
         "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**.sol",
-        "pretty": "prettier --write --tab-width 4 \"src/**/*.js\"",
+        "pretty": "prettier --write --tab-width 4 \"src/**/*.js\""
     },
     "author": "Dennison Bertram (www.dennisonbertram.com)",
     "license": "MIT",
