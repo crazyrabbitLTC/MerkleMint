@@ -113,6 +113,26 @@ async function main() {
     )
     Promise.all(promiseArray).then(x => console.log(x))
 
+    ///Check if all the tokens were minted:
+    let assetMintedArray = []
+    for (item of assets) {
+        item.minted = false
+        try {
+            let uri = await MMCoreInstance.methods
+                .tokenURI(item.tokenId)
+                .call({from: initializerAddress})
+
+            if (uri === item.tokenURI) {
+                console.log(`Token ${item.tokenId} has been successfully minted`)
+                item.minted = true
+            }
+        } catch (error) {
+            console.log(`Token ${item.tokenId} has not been minted`)
+        }
+        assetMintedArray.push(item)
+    }
+
+    console.log(assetMintedArray)
     // console.log(
     //     "TokenURI of 0: ",
     //     await MMCoreInstance.methods.tokenURI(0).call({ from: initializerAddress }),
