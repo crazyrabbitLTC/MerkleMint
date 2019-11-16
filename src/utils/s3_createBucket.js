@@ -1,7 +1,7 @@
 require("dotenv").config()
 const AWS = require("aws-sdk")
 const fs = require("fs")
-const { asyncForEach } = require("./asyncForEach")
+const {asyncForEach} = require("./asyncForEach")
 const accessKeyId = process.env.AWS_S3_ID
 const secretAccessKey = process.env.AWS_S3_Secret
 

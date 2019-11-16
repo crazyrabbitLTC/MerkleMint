@@ -59,13 +59,15 @@ async function main() {
         .addSerie(serieNumber, root, serieName, hashOfURI)
         .send({from: initializerAddress, gas: 1500000, gasPrice: "30000000000000"})
 
-      //console.log("TokenURI of 0: ", await MMCoreInstance.methods.tokenURI(0).call({from: initializerAddress}))
+    //console.log("TokenURI of 0: ", await MMCoreInstance.methods.tokenURI(0).call({from: initializerAddress}))
 
-    await MMControllerInstance.methods.mintAsset(
-      tokenURI, leaf, proof, tokenId, serieNumber
-    ).send({from: initializerAddress, gas: 1500000, gasPrice: "30000000000000"})
-    console.log("TokenURI of 0: ", await MMCoreInstance.methods.tokenURI(0).call({from: initializerAddress}))
-
+    await MMControllerInstance.methods
+        .mintAsset(tokenURI, leaf, proof, tokenId, serieNumber)
+        .send({from: initializerAddress, gas: 1500000, gasPrice: "30000000000000"})
+    console.log(
+        "TokenURI of 0: ",
+        await MMCoreInstance.methods.tokenURI(0).call({from: initializerAddress}),
+    )
 
     console.log("MMController Info: ", MMControllerInstance.address)
 }

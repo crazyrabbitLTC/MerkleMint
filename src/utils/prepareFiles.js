@@ -8,9 +8,9 @@ function prepareFiles(sourceFiles, config) {
         .filter(file => {
             return config.imageTypes.includes(getFileType(file.filePath).ext)
         })
-        .map((fileObj, index)=> {
+        .map((fileObj, index) => {
             return {
-              tokenId: index,
+                tokenId: index,
                 ...fileObj,
                 ...openSea,
                 data: {

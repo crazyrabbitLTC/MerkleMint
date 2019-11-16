@@ -1,40 +1,38 @@
 require("dotenv").config()
 const AWS = require("aws-sdk")
 const fs = require("fs")
-const { asyncForEach } = require("./asyncForEach")
+const {asyncForEach} = require("./asyncForEach")
 const accessKeyId = process.env.AWS_S3_ID
 const secretAccessKey = process.env.AWS_S3_Secret
 
 const BUCKET_NAME = "test-mint"
 const s3 = new AWS.S3({
-  accessKeyId,
-  secretAccessKey,
+    accessKeyId,
+    secretAccessKey,
 })
 
+const uploadMultipleFiles = async items => {
+    let newArray = []
+    for (const item of items) {
+        const fileContent = fs.readFileSync(item.filePath)
 
-const uploadMultipleFiles = async (items) => {
-
-  let newArray =[];
-  for (const item of items) {
-    const fileContent = fs.readFileSync(item.filePath);
-  
-    const params = { Bucket: BUCKET_NAME, Key: item.fileName, Body: fileContent };
-    try {
-      console.log("Starting upload")
-      const s3Obj = await s3.upload(params).promise();
-      console.log("finish upload");
-      newArray.push({
-        ...item,
-        s3_URL: s3Obj.Location,
-        s3_key: s3Obj.key,
-        s3_bucket: s3Obj.Bucket,
-    })
-      console.log("Success uploading data");
-    } catch (err) {
-      console.log("Error uploading data. ", err);
+        const params = {Bucket: BUCKET_NAME, Key: item.fileName, Body: fileContent}
+        try {
+            console.log("Starting upload")
+            const s3Obj = await s3.upload(params).promise()
+            console.log("finish upload")
+            newArray.push({
+                ...item,
+                s3_URL: s3Obj.Location,
+                s3_key: s3Obj.key,
+                s3_bucket: s3Obj.Bucket,
+            })
+            console.log("Success uploading data")
+        } catch (err) {
+            console.log("Error uploading data. ", err)
+        }
     }
-  }
-  return newArray;
+    return newArray
 }
 
 // const uploadMultipleFiles = async obj => {
@@ -68,7 +66,6 @@ const uploadMultipleFiles = async (items) => {
 // }
 
 const uploadFile = async (filePath, fileName) => {
-
     // Read content from the file
     console.log("Read File")
 
