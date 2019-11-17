@@ -1,4 +1,3 @@
-
 let App = {}
 App.web3 = {}
 App.networkReady = false
@@ -6,26 +5,9 @@ App.accessEnabled = false
 App.accounts = []
 App.balance = 0
 App.provider = null
+App.contractsReady = false
 App.mmCoreAddress = "0xf5e69f1bc287eBBA2dFC332F24095Fe803945424"
 App.mmControllerAddress = "0x5A0432b76a3e9a6fdf0d0f456d4C096266Cf2548"
-
-// async function loadWeb3() {
-//     if (window.ethereum) {
-//         App.web3 = new Web3(window.ethereum)
-//         App.networkReady = true
-//         App.provider = new ethers.providers.Web3Provider(web3js.currentProvider)
-
-//         enableWeb3()
-//     } else if (window.web3) {
-//         App.web3 = window.web3
-//         App.networkReady = true
-//     } else {
-//         console.log("Using Ganache")
-//         App.web3 = new Web3.providers.HttpProvider("http://localhost:8545")
-//         App.networkReady = true
-//     }
-//     loadContracts()
-// }
 
 function initweb3() {
     if (typeof web3 !== "undefined") {
@@ -46,7 +28,7 @@ function initweb3() {
 // You should initialize web3 instance after window load event has fired to avoid any race condition.
 
 async function loadContracts() {
-    $.getJSON("https://test-mint.s3.amazonaws.com/contracts.json", function(data) {
+    $.getJSON("https://test-mint.s3.amazonaws.com/contracts.json", async function(data) {
         App.mmCoreInstance = new web3js.eth.Contract(
             data.contracts.MMCore.abi,
             data.contracts.MMCore.address,
@@ -61,7 +43,37 @@ async function loadContracts() {
                 from: App.accounts[0],
             },
         )
+        await getMintStatus()
     })
+    
+}
+
+function getMintStatus(){
+        $("*[id*=isMintedButton]:visible").each(function() {
+            isMinted(
+                $(this)
+                    .siblings()
+                    .text(),
+            ).then(x => {
+                console.log("what is x? ", x)
+
+                if (x) {
+                    $(this).css("background-color", "green")
+                    $(this).html("Minted")
+                } else {
+                    $(this).css("background-color", "grey")
+                    $(this).html("Mint Now")
+                    $(this).click(function() {
+                        mintToken(
+                            $(this)
+                                .siblings()
+                                .text(),
+                        )
+                    })
+                }
+            })
+        })
+    
 }
 
 async function enableWeb3() {
@@ -132,8 +144,11 @@ async function getBalance(address) {
 }
 
 async function isMinted(tokenId) {
+  console.log(`Checking tokenId:${tokenId} if it's minted.`)
+  console.log("Is App.mmCoreinstance real? ", App.mmCoreInstance)
     try {
         let tx = await App.mmCoreInstance.methods.tokenURI(tokenId).call({ from: App.accounts[0] })
+        console.log(`Awaiting the response: ${tx}`);
         if (tx) return true
     } catch (error) {
         return false
