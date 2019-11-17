@@ -55,6 +55,12 @@ const sendMetaDataToIPFS = async filesWithHash => {
     return newArray
 }
 
+// const sendObjToIPFS = async (objArray) => {
+//   const buffArray = objArray.map(obj => {
+
+//   })
+// }
+
 module.exports = {
     sendFilesToIPFS,
     sendMetaDataToIPFS,

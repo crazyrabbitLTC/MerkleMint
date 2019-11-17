@@ -1,7 +1,8 @@
 const MyWeb3 = require("web3")
 const fs = require("fs")
 const path = require("path")
-// const web3 = new Web3("ws://127.0.0.1:8545")
+const chalk = require("chalk")
+const { uploadFile } = require("./S3")
 
 global.artifacts = artifacts
 global.web3 = web3
@@ -20,25 +21,29 @@ async function main() {
     const MerkleMintCore = Contracts.getFromLocal("MerkleMintCore")
     const MerkleMintController = Contracts.getFromLocal("MerkleMintController")
 
+    //console.log("Artifact data", MerkleMintCore.schema.abi)
+
     const [creatorAddress, initializerAddress, additionalMinter] = await ZWeb3.accounts()
 
     const MerkleMint = new SimpleProject("MerkleMint", null, { from: creatorAddress })
-
 
     const MMCoreInstance = await MerkleMint.createProxy(MerkleMintCore, {
         initArgs: [token.name, token.symbol, [initializerAddress], [initializerAddress]],
     })
     const MMControllerInstance = await MerkleMint.createProxy(MerkleMintController)
 
+    console.log(`The address of MMCore: ${chalk.red(MMCoreInstance.address)}`)
+    console.log(`The address of MMController: ${chalk.red(MMControllerInstance.address)}`)
+
     //Add MMController as Minter
     await MMCoreInstance.methods
         .addMinter(MMControllerInstance.address)
-        .send({ from: initializerAddress, gas: 1500000, gasPrice: "30000000000000" })
+        .send({ from: initializerAddress, gas: 1500000, gasPrice: "3000000" })
 
     //Add Token address to MMController
     await MMControllerInstance.methods
         .initializeController(MMCoreInstance.address)
-        .send({ from: initializerAddress, gas: 1500000, gasPrice: "30000000000000" })
+        .send({ from: initializerAddress, gas: 1500000, gasPrice: "3000000" })
 
     const { assets } = config
     const { tokenId, tokenURI, hashOfURI, root, leaf, proof } = assets[0]
@@ -51,7 +56,6 @@ async function main() {
     let gas = await MMControllerInstance.methods
         .addSerie(serieNumber, root, serieName, hashOfURI)
         .estimateGas({ from: initializerAddress })
-
 
     let lastBlock = await web3.eth.getBlock("latest")
     let limit = lastBlock.gasLimit
@@ -87,7 +91,9 @@ async function main() {
         path.join(configPath, `Project-${networkId}.json`),
         JSON.stringify(MerkleMint, null, 4),
     )
-    Promise.all(promiseArray).then(x => console.log(x))
+
+    let transactionArray = []
+    Promise.all(promiseArray).then(x => transactionArray.push(x))
 
     ///Check if all the tokens were minted:
     let assetMintedArray = []
@@ -107,6 +113,34 @@ async function main() {
         }
         assetMintedArray.push(item)
     }
+
+    const projectJson = {
+        network: networkId,
+        contracts: {
+            MMController: {
+                address: MMControllerInstance.address,
+                abi: MerkleMintController.schema.abi
+            },
+            MMCore: {
+                address: MMCoreInstance.address,
+                abi:  MerkleMintCore.schema.abi
+            },
+        },
+        merkletree: config,
+    }
+
+    const result = await saveProjectJson(projectJson, networkId);
+    console.log(result);
+
+}
+
+const saveProjectJson = async (obj, networkId )=> {
+    const filePath = path.join(configPath, `contracts.json`)
+
+    fs.writeFileSync(filePath, JSON.stringify(obj, null, 4))
+
+    const s3Obj = await uploadFile(filePath, `contracts.json`)
+    return s3Obj;
 }
 
 // For truffle exec

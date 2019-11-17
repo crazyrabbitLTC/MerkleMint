@@ -78,12 +78,12 @@ const uploadFile = async (filePath, fileName) => {
         Body: fileContent,
     }
     console.log("Upload Object: ", fileName)
-    console.log(`Upload Params: ${params.Bucket} ${params.Key} params.Body: ${typeof params.Body}`)
+    // console.log(`Upload Params: ${params.Bucket} ${params.Key} params.Body: ${typeof params.Body}`)
 
     const returnObject = await s3.upload(params).promise()
 
     console.log("Finish Upload")
-    console.log("Returned Object: ", returnObject)
+    // console.log("Returned Object: ", returnObject)
     return returnObject
 }
 
