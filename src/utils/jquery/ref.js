@@ -9,3 +9,41 @@
 <--Code goes here-->
 
 </script>
+
+
+$("*[id*=isMintedButton]:visible").each(function() {
+  console.log($(this))
+})
+
+$("*[id*=isMintedButton]:visible").each(function() {
+  isMinted(
+      $(this)
+          .siblings()
+          .text(),
+  ).then(console.log)
+})
+
+$("*[id*=isMintedButton]:visible").each(function() {
+  isMinted(
+      $(this)
+          .siblings()
+          .text(),
+  ).then(x => {
+      console.log("what is x? ", x)
+
+      if (x) {
+          $(this).css("background-color", "green")
+          $(this).html("Minted")
+      } else {
+          $(this).css("background-color", "grey")
+          $(this).html("Mint Now")
+          $(this).click(function() {
+              mintToken(
+                  $(this)
+                      .siblings()
+                      .text(),
+              )
+          })
+      }
+  })
+})

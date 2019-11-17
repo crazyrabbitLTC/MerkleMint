@@ -79,11 +79,15 @@ async function main() {
     let promiseArray = []
     for (item of assets) {
         const { tokenId, tokenURI, hashOfURI, root, leaf, proof } = item
-        promiseArray.push(
-            await MMControllerInstance.methods
-                .mintAsset(tokenURI, leaf, proof, tokenId, serieNumber)
-                .send({ from: initializerAddress, gas, gasPrice }),
-        )
+
+        //This is just to mint only even tokens, to give an example of what tokens aren't minted.
+        if (tokenId % 2 == 0) {
+            promiseArray.push(
+                await MMControllerInstance.methods
+                    .mintAsset(tokenURI, leaf, proof, tokenId, serieNumber)
+                    .send({ from: initializerAddress, gas, gasPrice }),
+            )
+        }
     }
 
     const networkId = await web3.eth.net.getId()
@@ -119,28 +123,27 @@ async function main() {
         contracts: {
             MMController: {
                 address: MMControllerInstance.address,
-                abi: MerkleMintController.schema.abi
+                abi: MerkleMintController.schema.abi,
             },
             MMCore: {
                 address: MMCoreInstance.address,
-                abi:  MerkleMintCore.schema.abi
+                abi: MerkleMintCore.schema.abi,
             },
         },
         merkletree: config,
     }
 
-    const result = await saveProjectJson(projectJson, networkId);
-    console.log(result);
-
+    const result = await saveProjectJson(projectJson, networkId)
+    console.log(result)
 }
 
-const saveProjectJson = async (obj, networkId )=> {
+const saveProjectJson = async (obj, networkId) => {
     const filePath = path.join(configPath, `contracts.json`)
 
     fs.writeFileSync(filePath, JSON.stringify(obj, null, 4))
 
     const s3Obj = await uploadFile(filePath, `contracts.json`)
-    return s3Obj;
+    return s3Obj
 }
 
 // For truffle exec

@@ -1,3 +1,4 @@
+
 let App = {}
 App.web3 = {}
 App.networkReady = false
@@ -26,29 +27,23 @@ App.mmControllerAddress = "0x5A0432b76a3e9a6fdf0d0f456d4C096266Cf2548"
 //     loadContracts()
 // }
 
-
-function initweb3 () {
-
-  if(typeof web3 !== 'undefined'){
-         // Use injected web3
-         web3js = new Web3(web3.currentProvider);
-       } else {
-       /* Fallback to local node or remote node               
+function initweb3() {
+    if (typeof web3 !== "undefined") {
+        // Use injected web3
+        web3js = new Web3(web3.currentProvider)
+    } else {
+        /* Fallback to local node or remote node               
           by default local HTTP-RPC server exposes port 8545.
           you can use Infura Node Urls also
           'https://ropsten.infura.io/<API KEy>'*/
-  
-         web3js = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545'));
-       }
-       enableWeb3()
-       loadContracts()
-  }
-  
-       // You should initialize web3 instance after window load event has fired to avoid any race condition.
-  
-   
 
+        web3js = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"))
+    }
+    enableWeb3()
+    loadContracts()
+}
 
+// You should initialize web3 instance after window load event has fired to avoid any race condition.
 
 async function loadContracts() {
     $.getJSON("https://test-mint.s3.amazonaws.com/contracts.json", function(data) {
@@ -136,16 +131,23 @@ async function getBalance(address) {
     })
 }
 
-window.onload = function() {
-  if (window.jQuery) {  
-      // jQuery is loaded  
-      console.log("jQuery Loaded")
-      initweb3();
-      // loadWeb3()
-  } else {
-      // jQuery is not loaded
-      console.log("jQuery not loaded")
-  }
+async function isMinted(tokenId) {
+    try {
+        let tx = await App.mmCoreInstance.methods.tokenURI(tokenId).call({ from: App.accounts[0] })
+        if (tx) return true
+    } catch (error) {
+        return false
+    }
 }
 
-//window.addEventListener('load',initweb3);
+window.onload = function() {
+    if (window.jQuery) {
+        // jQuery is loaded
+        console.log("jQuery Loaded")
+        initweb3()
+        // loadWeb3()
+    } else {
+        // jQuery is not loaded
+        console.log("jQuery not loaded")
+    }
+}
