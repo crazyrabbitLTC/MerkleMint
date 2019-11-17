@@ -11,6 +11,7 @@ async function loadWeb3() {
         App.web3 = new Web3(window.ethereum)
         App.networkReady = true
         App.provider = new ethers.providers.Web3Provider(App.web3.currentProvider)
+        
         enableWeb3()
     } else if (window.web3) {
         App.web3 = window.web3
