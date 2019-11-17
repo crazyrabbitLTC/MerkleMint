@@ -1,19 +1,23 @@
 let App = {}
+App.web3 = {}
 App.networkReady = false
 App.accessEnabled = false
 App.accounts = []
+App.balance = 0
+App.provider = null
 
 async function loadWeb3() {
     if (window.ethereum) {
-        App.web3Provider = window.ethereum
+        App.web3 = new Web3(window.ethereum)
         App.networkReady = true
+        App.provider = new ethers.providers.Web3Provider(App.web3.currentProvider)
         enableWeb3()
     } else if (window.web3) {
-        App.web3Provider = window.web3.currentProvider
+        App.web3 = window.web3
         App.networkReady = true
     } else {
         console.log("Using Ganache")
-        App.web3Provider = new Web3.providers.HttpProvider("http://localhost:8545")
+        App.web3 = new Web3.providers.HttpProvider("http://localhost:8545")
         App.networkReady = true
     }
 }
@@ -28,15 +32,16 @@ async function enableWeb3() {
         console.error("User denied account access")
     }
     App.accessEnabled = true
-    getAccounts()
+    await getAccounts()
 }
 
 async function getAccounts() {
-    web3.eth.getAccounts(function(error, accounts) {
+    App.web3.eth.getAccounts(async function(error, accounts) {
         if (error) {
             console.log(error)
         }
         console.log("Inside the accounts: ", accounts)
+        await getBalance(accounts[0])
         App.accounts = accounts
 
         //Change any Text examples
@@ -61,23 +66,27 @@ async function getAccounts() {
 }
 
 async function getBalance(address) {
-    let balance = await web3.eth.getBalance(address)
 
-    balance = web3.utils.fromWei(balance, "ether")
-    console.log("Balance is: ", balance)
+    let etherString 
+    App.provider.getBalance(address).then(balance => {
+        // balance is a BigNumber (in wei); format is as a sting (in ether)
+        etherString = ethers.utils.formatEther(balance)
 
-    $(document).ready(function() {
-        $("#eth-balance-text").text(balance)
-    })
+        console.log("Balance: " + etherString)
 
-    //Change any inner html examples
-    $(document).ready(function() {
-        $("#eth-balance-inner-htmls").html(`<b>${balance}</b>`)
-    })
+        $(document).ready(function() {
+            $("#eth-balance-text").text(etherString)
+        })
 
-    //Change any val examples
-    $(document).ready(function() {
-        $("#eth-balance-value").val(balance)
+        //Change any inner html examples
+        $(document).ready(function() {
+            $("#eth-balance-inner-htmls").html(`<b>${etherString}</b>`)
+        })
+
+        //Change any val examples
+        $(document).ready(function() {
+            $("#eth-balance-value").val(etherString)
+        })
     })
 }
 
