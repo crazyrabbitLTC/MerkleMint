@@ -1,7 +1,8 @@
 require("dotenv").config()
 const Webflow = require("webflow-api")
-const webflow = new Webflow({token: process.env.webflow})
+const webflow = new Webflow({ token: process.env.webflow })
 const _SiteID = "5dcc5038e31d38150bb61ed5"
+const chalk = require("chalk")
 
 const sendToWebFlow = async (fileObjs, collectionName) => {
     const collections = await getAllCollections()
@@ -13,7 +14,7 @@ const sendToWebFlow = async (fileObjs, collectionName) => {
                 name: `IMG-${item.fileName.slice(0, -4)}`,
                 slug: Date.now().toString(),
                 tokenid: item.tokenId,
-                tokenuri: item.image,
+                tokenuri: item.id.tokenURI,
                 leaf: item.merkleProof.leaf,
                 root: item.merkleProof.root,
                 proof: JSON.stringify(item.merkleProof.proof),
@@ -23,6 +24,8 @@ const sendToWebFlow = async (fileObjs, collectionName) => {
                 _archived: false,
                 _draft: false,
             }
+
+            console.log(chalk.red(JSON.stringify(data, null, 4)))
             const result = await uploadToCMS(cms, data)
             console.log(result)
         } catch (error) {
@@ -32,13 +35,13 @@ const sendToWebFlow = async (fileObjs, collectionName) => {
 }
 
 const getAllCollections = async (siteId = _SiteID) => {
-    const array = await webflow.collections({siteId})
+    const array = await webflow.collections({ siteId })
 
     return array
 }
 
 const getCMSByName = async (CMSName, siteId = _SiteID) => {
-    const array = await webflow.collections({siteId})
+    const array = await webflow.collections({ siteId })
     return selectCMS(array, CMSName)
 }
 
@@ -51,7 +54,7 @@ const selectCMS = async (collections, collectionName) => {
 }
 
 const getCMSById = async collectionId => {
-    return await webflow.collection({collectionId})
+    return await webflow.collection({ collectionId })
 }
 
 const uploadToCMS = async (collection, data) => {
@@ -63,7 +66,7 @@ const uploadToCMS = async (collection, data) => {
     })
 }
 
-module.exports = {sendToWebFlow}
+module.exports = { sendToWebFlow }
 
 // getAllCollections()
 //     .then(x => {

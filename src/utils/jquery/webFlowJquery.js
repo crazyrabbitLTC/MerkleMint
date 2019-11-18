@@ -76,8 +76,7 @@ function getMintStatus() {
                             .siblings()
                             .children()
                             .filter("#tokenURI")
-                            .text()
-                            .slice(6),
+                            .text(),
                         proof: $(this)
                             .parent()
                             .siblings()
@@ -95,9 +94,24 @@ function getMintStatus() {
 }
 
 async function mintToken(obj) {
+  console.log(obj)
+    let lastBlock = await web3js.eth.getBlock("latest")
+    let limit = lastBlock.gasLimit
+
+    let gasPrice = await web3js.eth.getGasPrice()
+
+    console.log("GasPRice: ".gasPrice)
+
+    let gas = await App.mmControllerInstance.methods
+        .mintAsset(obj.tokenURI, obj.leaf, JSON.parse(obj.proof), obj.tokenId, obj.serieNumber)
+        .estimateGas({ from: App.accounts[0] })
+
+    gas = Math.min(limit - 1, Math.ceil(gas * 1.2))
+
+    console.log("Gas ", gas)
     await App.mmControllerInstance.methods
-        .mintAsset(obj.tokenURI, obj.leaf, obj.proof, obj.tokenId, obj.serieNumber)
-        .send({ from: App.accounts[0] })
+        .mintAsset(obj.tokenURI, obj.leaf, JSON.parse(obj.proof), obj.tokenId, obj.serieNumber)
+        .send({ from: App.accounts[0], gas: 1500000, gasPrice: "3000000" })
 }
 
 async function enableWeb3() {

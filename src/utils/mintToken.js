@@ -79,7 +79,7 @@ async function main() {
     let promiseArray = []
     for (item of assets) {
         const { tokenId, tokenURI, hashOfURI, root, leaf, proof } = item
-
+        console.log(JSON.stringify(item,null,4))
         //This is just to mint only even tokens, to give an example of what tokens aren't minted.
         if (tokenId % 2 == 0) {
             promiseArray.push(

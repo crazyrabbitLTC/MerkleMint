@@ -103,7 +103,7 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         bytes32[] memory _proof,
         uint256 tokenId,
         uint256 _serie
-    ) public onlyOwner {
+    ) public {
         require(
             isValidData(_asset, _findRoot(_serie), _leaf, _proof),
             "MerkleMintController:: Not a valid Asset"
