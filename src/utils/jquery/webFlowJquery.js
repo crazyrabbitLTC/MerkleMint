@@ -6,8 +6,6 @@ App.accounts = []
 App.balance = 0
 App.provider = null
 App.contractsReady = false
-App.mmCoreAddress = "0xf5e69f1bc287eBBA2dFC332F24095Fe803945424"
-App.mmControllerAddress = "0x5A0432b76a3e9a6fdf0d0f456d4C096266Cf2548"
 
 function initweb3() {
     if (typeof web3 !== "undefined") {
@@ -43,37 +41,63 @@ async function loadContracts() {
                 from: App.accounts[0],
             },
         )
+
+        console.log("methods mmCore", App.mmCoreInstance.methods)
         await getMintStatus()
     })
-    
 }
 
-function getMintStatus(){
-        $("*[id*=isMintedButton]:visible").each(function() {
-            isMinted(
-                $(this)
-                    .siblings()
-                    .text(),
-            ).then(x => {
-                console.log("what is x? ", x)
+function getMintStatus() {
+    $("*[id*=isMintedButton]:visible").each(function() {
+        isMinted(
+            $(this)
+                .siblings()
+                .text(),
+        ).then(x => {
+            if (x) {
+                $(this).css("background-color", "green")
+                $(this).html("Minted")
+            } else {
+                $(this).css("background-color", "grey")
+                $(this).html("Mint Now")
+                $(this).click(function() {
+                    let tokenObj = {
+                        tokenId: $(this)
+                            .siblings()
+                            .text(),
+                        leaf: $(this)
+                            .parent()
+                            .siblings()
+                            .children()
+                            .filter("#token-leaf")
+                            .text(),
+                        tokenURI: $(this)
+                            .parent()
+                            .siblings()
+                            .children()
+                            .filter("#tokenURI")
+                            .text()
+                            .slice(6),
+                        proof: $(this)
+                            .parent()
+                            .siblings()
+                            .children()
+                            .filter("#token-proof")
+                            .text(),
+                        serieNumber: 0,
+                    }
 
-                if (x) {
-                    $(this).css("background-color", "green")
-                    $(this).html("Minted")
-                } else {
-                    $(this).css("background-color", "grey")
-                    $(this).html("Mint Now")
-                    $(this).click(function() {
-                        mintToken(
-                            $(this)
-                                .siblings()
-                                .text(),
-                        )
-                    })
-                }
-            })
+                    mintToken(tokenObj)
+                })
+            }
         })
-    
+    })
+}
+
+async function mintToken(obj) {
+    await App.mmControllerInstance.methods
+        .mintAsset(obj.tokenURI, obj.leaf, obj.proof, obj.tokenId, obj.serieNumber)
+        .send({ from: App.accounts[0] })
 }
 
 async function enableWeb3() {
@@ -94,7 +118,7 @@ async function getAccounts() {
         if (error) {
             console.log(error)
         }
-        console.log("Inside the accounts: ", accounts)
+
         await getBalance(accounts[0])
         App.accounts = accounts
 
@@ -125,7 +149,7 @@ async function getBalance(address) {
         // balance is a BigNumber (in wei); format is as a sting (in ether)
         etherString = ethers.utils.formatEther(balance)
 
-        console.log("Balance: " + etherString)
+        //console.log("Balance: " + etherString)
 
         $(document).ready(function() {
             $("#eth-balance-text").text(etherString)
@@ -144,11 +168,11 @@ async function getBalance(address) {
 }
 
 async function isMinted(tokenId) {
-  console.log(`Checking tokenId:${tokenId} if it's minted.`)
-  console.log("Is App.mmCoreinstance real? ", App.mmCoreInstance)
+    // console.log(`Checking tokenId:${tokenId} if it's minted.`)
+    // console.log("Is App.mmCoreinstance real? ", App.mmCoreInstance)
     try {
         let tx = await App.mmCoreInstance.methods.tokenURI(tokenId).call({ from: App.accounts[0] })
-        console.log(`Awaiting the response: ${tx}`);
+        //console.log(`Awaiting the response: ${tx}`);
         if (tx) return true
     } catch (error) {
         return false
