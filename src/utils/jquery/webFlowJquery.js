@@ -35,7 +35,7 @@ async function loadContracts() {
             },
         )
         App.mmControllerInstance = new web3js.eth.Contract(
-            data.contracts.MMCore.abi,
+            data.contracts.MMController.abi,
             data.contracts.MMController.address,
             {
                 from: App.accounts[0],
