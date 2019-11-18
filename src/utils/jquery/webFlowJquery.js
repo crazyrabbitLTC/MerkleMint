@@ -100,7 +100,7 @@ async function mintToken(obj) {
 
     let gasPrice = await web3js.eth.getGasPrice()
 
-    console.log("GasPRice: ".gasPrice)
+    console.log("GasPRice: ", gasPrice)
 
     let gas = await App.mmControllerInstance.methods
         .mintAsset(obj.tokenURI, obj.leaf, JSON.parse(obj.proof), obj.tokenId, obj.serieNumber)
