@@ -20,13 +20,19 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     //Struct that defines a Serie
     //ToDO: Add a count of how many images are in a series
     struct Serie {
-        bytes32 merkleRoot;
-        bytes32[] ipfsHash;
-        string serieName;
-        uint256 seriesID;
+        bytes32 merkleRoot;  //The Merkle root for this series.
+        bytes32[] ipfsHash; //The IPFS hash for more information about this series
+        string serieName; //The String value name of this Series
+        uint256 seriesID; //The ID of this series- an Integer
+        uint256 totalTokens; //The Total number of tokens this series can have
+        uint256 tokenCount; //The number of tokens that have been minted so far in this series
+        mapping(uint256 => uint256) catalogue; //Each token currently minted in the series
     }
     //Maping of Series by integer
     mapping(uint256 => Serie) public series;
+
+    //Mapping associating a token Id to a series
+    mapping(uint256 => uint256) public tokenInSeriesRegister;
 
     /**
      * @dev Event for when a new Serie is added.
@@ -66,12 +72,14 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     * @param _serieName is the name of the serie.
     * @param _ipfsHash is the first off-chain data location for the serie. (More can be added seperately)
     * @return emits the SerieAdded event.
+    * TODO: Find a way to prevent incorrect total tokens being set.
     */
     function addSerie(
         uint256 _serieNumber,
         bytes32 _merkleRoot,
         string memory _serieName,
-        bytes32 _ipfsHash
+        bytes32 _ipfsHash,
+        uint256 _totalTokens
     ) public onlyOwner {
         require(
             series[_serieNumber].seriesID == 0,
@@ -82,6 +90,8 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         serie.merkleRoot = _merkleRoot;
         serie.seriesID = _serieNumber;
         serie.serieName = _serieName;
+        serie.totalTokens = _totalTokens;
+        serie.tokenCount = 0;
 
         series[_serieNumber] = serie;
         series[_serieNumber].ipfsHash.push(_ipfsHash);
@@ -108,6 +118,12 @@ contract MerkleMintController is Initializable, Ownable, Verify {
             isValidData(_asset, _findRoot(_serie), _leaf, _proof),
             "MerkleMintController:: Not a valid Asset"
         );
+
+        uint256 tokenCount = series[_serie].tokenCount;
+
+        series[_serie].tokenCount = tokenCount + 1;
+        series[_serie].catalogue[tokenCount] = tokenId;
+
         token.mintWithTokenURI(address(this), tokenId, _asset);
     }
 
