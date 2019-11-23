@@ -4,7 +4,9 @@ const [sender] = accounts
 
 
 const {BN, expectEvent} = require("openzeppelin-test-helpers")
-const {root, leaf, proof, validWord, numElements} = require("./utils/utils.js")
+//const {root, leaf, proof, validWord, numElements} = require("./utils/utils.js")
+
+const {MerkleMint } = require("../src/index")
 
 const keccak256 = require("keccak256")
 
@@ -26,12 +28,16 @@ describe("MerkleMintController", async () => {
     let seriesName = "First Series"
     let ipfsHash = keccak256(seriesName)
 
+    const elements = ["love", "anger", "hunger", "shibe"]
+
+    let merkleMint = new MerkleMint(elements);
+
     beforeEach(async () => {
         mmCore = await MerkleMintCore.new()
         mmController = await MerkleMintController.new()
 
         await mmController.initializeController(mmCore.address)
-        await mmController.addSerie(series, root, seriesName, ipfsHash, numElements)
+        await mmController.addSerie(series, merkleMint.root(), seriesName, ipfsHash, merkleMint.length())
         await mmCore.initialize(
             tokenName,
             tokenSymbol,
@@ -50,6 +56,8 @@ describe("MerkleMintController", async () => {
 
     it("it can mint a token", async () => {
         //ValidWord is the token URI
+        const leaf = merkleMint.leaf(0)
+        const proof = merkleMint.proof(0)
         const result = await mmController.mintAsset(validWord, leaf, proof, tokenId, series, {
             from: sender,
         })
