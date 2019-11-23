@@ -27,15 +27,10 @@ describe("MerkleMintController", async () => {
     let ipfsHash = keccak256(seriesName)
 
     beforeEach(async () => {
-        mmCore = await MerkleMintCore.new({from: sender})
-        mmController = await MerkleMintController.new({from: sender})
+        mmCore = await MerkleMintCore.new()
+        mmController = await MerkleMintController.new()
 
         await mmController.initializeController(mmCore.address)
-        let owner = await mmController.owner()
-        console.log("OWner of controller is: ", owner)
-        console.log("DefaultSender is: ", defaultSender)
-        console.log("Address of Controller: ", mmController.address)
-
         await mmController.addSerie(series, root, seriesName, ipfsHash, numElements)
         await mmCore.initialize(
             tokenName,
@@ -49,9 +44,7 @@ describe("MerkleMintController", async () => {
         const name = await mmCore.name()
         const symbol = await mmCore.symbol()
 
-        // assert.equal(name, tokenName)
         expect(name).to.equal(tokenName)
-        //assert.equal(symbol, tokenSymbol)
         expect(symbol).to.equal(tokenSymbol)
     })
 
