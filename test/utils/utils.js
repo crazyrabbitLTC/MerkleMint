@@ -6,6 +6,7 @@ const merkleTree = new MerkleTree(elements)
 
 const root = merkleTree.getHexRoot()
 
+const numElements = elements.length;
 const proof = merkleTree.getHexProof(elements[0])
 
 const leaf = bufferToHex(keccak256(elements[0]))
@@ -17,4 +18,5 @@ module.exports = {
   root,
   leaf,
   proof,
+  numElements
 }

@@ -8,9 +8,10 @@
   "name": "merklemint",
   "version": "0.0.2",
   "compiler": {
-    "manager": "truffle",
+    "manager": "openzeppelin",
     "compilerSettings": {
       "optimizer": {}
-    }
+    },
+    "solcVersion": "0.5.13"
   }
 }
