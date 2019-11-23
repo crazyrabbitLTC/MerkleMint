@@ -3,7 +3,8 @@
 
 const { keccak256, bufferToHex } = require('ethereumjs-util');
 
-//From Ameen's MerkleTree
+//MerkleTree class from OpenZeppelin-Contract
+//https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/test/helpers/merkleTree.js
 class MerkleTree {
   constructor (elements) {
     // Filter empty strings and hash elements
