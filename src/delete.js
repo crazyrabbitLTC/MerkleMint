@@ -4,19 +4,14 @@ const [sender] = accounts
 
 
 const {BN, expectEvent} = require("openzeppelin-test-helpers")
-//const {root, leaf, proof, merkleMint.getElement(0), numElements} = require("./utils/utils.js")
+const {root, leaf, proof, validWord, numElements} = require("./utils/utils.js")
 
-const {MerkleMint } = require("../src/index")
-
-// const keccak256 = require("keccak256")
+const keccak256 = require("keccak256")
 
 const MerkleMintCore = contract.fromArtifact("MerkleMintCore")
 const MerkleMintController = contract.fromArtifact("MerkleMintController")
 
 const {expect} = require("chai")
-const elements = ["love", "anger", "hunger", "shibe"]
-
-const merkleMint = new MerkleMint(elements);
 
 describe("MerkleMintController", async () => {
     let mmController
@@ -29,18 +24,14 @@ describe("MerkleMintController", async () => {
 
     let series = 1
     let seriesName = "First Series"
-    let ipfsHash = merkleMint.keccak256(seriesName)
-
-   
-
-    
+    let ipfsHash = keccak256(seriesName)
 
     beforeEach(async () => {
         mmCore = await MerkleMintCore.new()
         mmController = await MerkleMintController.new()
 
         await mmController.initializeController(mmCore.address)
-        await mmController.addSerie(series, merkleMint.getRoot(), seriesName, ipfsHash, merkleMint.getTotalElements())
+        await mmController.addSerie(series, root, seriesName, ipfsHash, numElements)
         await mmCore.initialize(
             tokenName,
             tokenSymbol,
@@ -58,20 +49,17 @@ describe("MerkleMintController", async () => {
     })
 
     it("it can mint a token", async () => {
-        //merkleMint.getElement(0) is the token URI
-        const leaf = merkleMint.getLeafByIndex(0)
-        const proof = merkleMint.getProofByIndex(0)
-        const tokenURI = merkleMint.getElement(0)
-        const result = await mmController.mintAsset(tokenURI, leaf, proof, tokenId, series, {
+        //ValidWord is the token URI
+        const result = await mmController.mintAsset(validWord, leaf, proof, tokenId, series, {
             from: sender,
         })
         const URI = await mmCore.tokenURI(tokenId)
 
-        expect(URI).to.equal(tokenURI)
+        expect(URI).to.equal(validWord)
     })
 
     it("it can add additional IPFSHash", async () => {
-        const newHash = merkleMint.keccak256("The second Thing")
+        const newHash = keccak256("The second Thing")
         const receipt = await mmController.addIpfsRefToSerie(newHash, 1, {
             from: defaultSender,
         })

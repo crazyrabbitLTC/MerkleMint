@@ -26,6 +26,7 @@
         "ipfs-http-client": "^39.0.2",
         "keccak256": "^1.0.0",
         "merkle-tree-solidity": "^1.0.8",
+        "nodemon": "^2.0.1",
         "openzeppelin-test-helpers": "^0.5.1",
         "read-chunk": "^3.2.0",
         "truffle-hdwallet-provider": "^1.0.17",
