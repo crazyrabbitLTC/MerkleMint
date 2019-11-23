@@ -1,7 +1,7 @@
 "use strict"
-const { accounts, contract, defaultSender } = require('@openzeppelin/test-environment');
-const [ sender, second ] = accounts;
-console.log(accounts);
+const {accounts, contract, defaultSender} = require("@openzeppelin/test-environment")
+const [sender] = accounts
+
 
 const {BN, expectEvent} = require("openzeppelin-test-helpers")
 const {root, leaf, proof, validWord, numElements} = require("./utils/utils.js")
@@ -11,7 +11,7 @@ const keccak256 = require("keccak256")
 const MerkleMintCore = contract.fromArtifact("MerkleMintCore")
 const MerkleMintController = contract.fromArtifact("MerkleMintController")
 
-const { expect } = require('chai');
+const {expect} = require("chai")
 
 describe("MerkleMintController", async () => {
     let mmController
@@ -31,10 +31,10 @@ describe("MerkleMintController", async () => {
         mmController = await MerkleMintController.new({from: sender})
 
         await mmController.initializeController(mmCore.address)
-        let owner = await mmController.owner();
-        console.log("OWner of controller is: ", owner);
+        let owner = await mmController.owner()
+        console.log("OWner of controller is: ", owner)
         console.log("DefaultSender is: ", defaultSender)
-        console.log("Address of Controller: ",mmController.address);
+        console.log("Address of Controller: ", mmController.address)
 
         await mmController.addSerie(series, root, seriesName, ipfsHash, numElements)
         await mmCore.initialize(
@@ -62,21 +62,14 @@ describe("MerkleMintController", async () => {
         })
         const URI = await mmCore.tokenURI(tokenId)
 
-        expect(URI).to.equal(validWord);
-
+        expect(URI).to.equal(validWord)
     })
 
     it("it can add additional IPFSHash", async () => {
         const newHash = keccak256("The second Thing")
         const receipt = await mmController.addIpfsRefToSerie(newHash, 1, {
-            from: second,
+            from: defaultSender,
         })
-      // console.log("Address of mmController: ", mmController.address)
-      // console.log("Address of mmCore ", mmCore.address)
-        let owner = await mmController.owner();
-        expect(owner).to.equal(sender);
-        // console.log("OWNER: ", owner);
-        // expectEvent(receipt, "IPFSHashAdded", {SerieNumber: new BN(1)})
-        // done()
+        expectEvent(receipt, "IPFSHashAdded", {SerieNumber: new BN(1)})
     })
 })
