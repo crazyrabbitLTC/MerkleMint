@@ -1,6 +1,8 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/crazyrabbitLTC/MerkleMint/badge.svg?branch=master)](https://coveralls.io/github/crazyrabbitLTC/MerkleMint?branch=master)
 
+Note: WebFlow integration has been removed to focus on the core functionality. It can still be found in the branch `webFlow`
+
 # MerkleMint
 A solution to minting non-fungible tokens for items in a) large data sets or b) data sets with large items. 
 
