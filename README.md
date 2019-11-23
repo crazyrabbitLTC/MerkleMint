@@ -4,32 +4,51 @@
 Note: WebFlow integration has been removed to focus on the core functionality. It can still be found in the branch `webFlow`
 
 # MerkleMint
-A solution to minting non-fungible tokens for items in a) large data sets or b) data sets with large items. 
+Counterfactual ERC721 Token Minting. 
+
+### What is it?
+
+A nice primer on using [counterfactual](https://medium.com/statechannels/counterfactual-generalized-state-channels-on-ethereum-d38a36d25fc6) *things* in Ethereum. 
+
+MerkleMint allows for counterfactual minting of NFT tokens. In a nutshell, by storing the root of a merkle tree on-chain, you can prove that you have a set of elements that *could* be minted on-chain if they were needed, but until they are needed, no sense in minting them. 
+
+Example: Lets say you Beyonce has tour coming up and she wants to use ERC721's as tickets. Lets say she expects 1 million people to attend her tour. If she were to mint each NFT Token at the start, she would be spending an enormous amount of money on gas minting all 1 million tokens. With MerkleMint however, she needs only to store the root of a merkle tree on-chain, then as each fan purchases a ticket (her fan can even pay the gas for minting!), the NFT can be minted on demand. 
+
+The beauty of using a merkle tree is that there are no scalpers: You can prove there are 1 million possible tickets, without minting them. You also can't mint a fake ticket- only the tickets within the merkle tree will be accepted as valid. You can also share the entire list of tickets before hand- by building a merkle tree out of signatures, the tree can be public, without exposing any information about individual tickets. 
+
+Merkle Mint can be used for a wide range of situations for which NFT tokens are desired, but are not performant to mint at the outset. They can be used to represent enormous collections of items on-chain with minimal gas costs. 
+
+
+
 
 A HeritageDao Research Project: www.heritageDao.com
 
 # QuickStart
 
-Requirements: truffle, OpenZeppelin CLI, ganache-cli
+Requirements: OpenZeppelin CLI, ganache-cli
 
-Currently (v0.0.1) the project is designed to create a free-standing ERC-721 token (`MerkleMintCore.sol`). This contract is designed to be upgradable and used with the OpenZeppelin CLI/SDK system. However in the future I will include `truffle migrations` so that it will work with `truffle deploy` as well. 
+Currently (v0.0.4) the project is designed to create a free-standing ERC-721 token (`MerkleMintCore.sol`). This contract is designed to be upgradable and used with the OpenZeppelin CLI/SDK system. However in the future I will include `truffle migrations` so that it will work with `truffle deploy` as well. 
 
 `MerkleMintCore.sol` : This is a full featured ERC-721 token based on OpenZeppelin Contracts library. There have been no changes to the OpenZeppelin code and `MerkleMintCore.sol` if deployed will create a full featured ERC-721 token. 
 
 `MerkleMintController.sol` : When assigned a minter-role for `MerkleMintCore.sol` this contract will mint tokens only when they have been found to exist in a registered Serie. Series are collections of counterfactually mintable tokens. Each Serie has a merkleroot saved in a `struct` which is checked against each time the contract is requested to mint a token. 
 
-To learn how to create a suitable merkle tree, and understand how `MerkleMint` works, please see the `test` folder and inspect `MerkleMintController.js`. 
+To learn how to create a suitable merkle tree, and understand how `MerkleMint` works, please see the `test` folder and follow along below.  
 
-UPDATE: The project now uses OpenZeppelin's MerkleProof library. 
-~~Currently `MerkleMint` is based on https://github.com/ameensol/merkle-tree-solidity but I will most likely upgrade it to OpenZeppelin's Merkle Proof library contract in the near future.~~
+The project is based on OpenZeppelin's MerkleProof library.
 
 # Installation: 
+
+### Part 1 (Solidity)
+
+There are two parts to `MerkleMint`, the solidity contracts which verify the merkle tree and allow for counterfactual minting of tokens, and the Javascript library which simplifies interacting with the Solidity contracts. 
+
 
 Clone the repo. 
 
 `npm install`
 
-The project uses OpenZeppelin CLI. 
+The project uses [OpenZeppelin CLI](https://www.npmjs.com/package/@openzeppelin/cli) (please install it). 
 
 Deploy `MerkleMintController.sol` first.
 
@@ -55,6 +74,43 @@ Select the `MerkleMintController` contract and call the `initializeController` f
 
 You now have a working MerkleMint contract. To learn how to mint tokens, look at the `test` folder to see an example of how it is done for testing purposes. 
 
+
+### Part 1 (Javascript)
+
+To see an example of how to use `MerkleMint` in a javascript file, look at the `test` folder to see an example of how the tests are run against the soldiity code. 
+
+To create a new MerkleMint object: 
+
+```
+const {MerkleMint} = require("merklemint")
+
+//Create a list of elements. This can be objects and should represent your Tokens. 
+//You should not have duplicates (currently)
+const elements = ["TokenURI1", "TokenURI2", "TokenURI3"]
+
+//Create a new MerkleMint Object
+const merkleMint = new MerkleMint(elements)
+```
+
+To get the root of your merkle tree: 
+
+`console.log(merkleMint.getRoot())`
+
+To get a merkle proof by index of your elements:
+
+`console.log(merkleMint.getProofByIndex(0))`
+
+To get a leaf using an element in your `elements` array:
+
+`console.log(merkleMint.getLeaf("TokenURI1"))`
+
+To get a proof using an element in your `elements` array: 
+
+`console.log(merkleMint.getPRoof("TokenURI1"))`
+
+### More documentation on the way!
+
+
 # TODO: 
 Create a useful utility for automating the merkle mint process. 
 
@@ -62,28 +118,6 @@ Create a useful utility for automating the merkle mint process.
 
 
 # The Problem
-The Heritage Dao needs to mint non-fungible tokens representing photographic assets in it's collection. Because the collection is so large, it should only be required to mint an assets token when absolutely nessesary, rather than minting all of them in advance. The idea being that the possiblity to mint an item, for an item that is not currently in use, is as good as actually having minted the item itself. 
-
-To solve this a number of solutions were investigated, the two favorable solutions are: Signature Recovery and MerkleProofs, but both indiviuall have drawbacks. MerkleMint will show that the solution is a combination of the two techniques. 
-
-# Signature Recovery
-For Signature Recovery the Heritage Dao presigns the metadata for all the assets in it's collection. To mint an asset it is required to provide the relevant metadata details to the item (namely, the resulting off-chain location for the Asset metadata), the smart contract recovers the signature, checks that the signature is valid and then proceeds to mint the asset. 
-
-Advantages: Ths process is fast. The Heritage Dao signs all items in the collection and makes this signature list availible publically. The collection can be infinitely large as signatures can be created on-demand, and it is trivial to generates large sets of signatures. 
-
-Disadvantages: The smart contract appropriately limits minting to only items which are signed as authentically present in the HeritageDao Collection. The problem however is that the smart contract can not check if the signed item is actually a member of the Collection itself. This means that while the contract will disallow arbitrary minting, it does not prevent the arbitrary signing assets not inside the offical collection. This means that the vector of attack is now the private key responsible for signing data that is validated by the smart contract. 
-While the Heritage Dao can make public it's entire collection and the cooresponding signatures, the public can not verify that this list is exhaustive. The public list constitutes only a subset of an infinite possible list of signed data. It is not possible for the smart contract to prove a item is not a member of the larger set, and it is not possible for the public to be confident only members of the Heritage Dao Collection can be minted. 
-
-# MerkleProofs
-Merkle Proofs allow for the creation of a Merkle Tree where we store a root on-chain and to mint and assets it is required to provide a suitable proof to the smart contract which should resolve to the correct root. 
-
-Advantages: As the root of the Merkle Tree is dependent upon all of it's leaves, it is possible with certainty to identify all the possible members of a valid collection. This means the Heritage Dao Collection can publish in a public manner, all the assets which comprise a collection and users can know with certainty that only the assets included in this collection will properlly resolve to root stored on-chain, and thus only these assets are possible to mint. Unlike the signature recovery implementation, once the root is published on-chain, it is no longer possible for assets to be added to the collection. 
-
-Disadvantages: For datasets with assets that are large in size, the creation of a merkle tree is computationally challanging. The Heritage Dao collection is expect to reach multiple gigabytes in the near term, terabytes in the medium term and petabytes in the long term. 
-
-## Solution 
-
-The creation of a MerkleTree of Signatures. (in Progress)
 
 
 
