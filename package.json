@@ -4,7 +4,7 @@
     "description": "A solution for counterfactually minting tokens on ethereum",
     "main": "index.js",
     "scripts": {
-        "test": "npx mocha --exit --recursive test",
+        "test": "mocha --exit --recursive test",
         "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
         "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**.sol",
         "pretty": "prettier --write --tab-width 4 \"src/**/*.js\""
@@ -26,6 +26,7 @@
         "ipfs-http-client": "^39.0.2",
         "keccak256": "^1.0.0",
         "merkle-tree-solidity": "^1.0.8",
+        "mocha": "^6.2.2",
         "nodemon": "^2.0.1",
         "openzeppelin-test-helpers": "^0.5.1",
         "read-chunk": "^3.2.0",

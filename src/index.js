@@ -5,7 +5,7 @@ const {MerkleTree} = require("./merkleTree")
 
 class MerkleMint {
     constructor(elements) {
-        this.elements = elements
+        this._elements = elements
         this.tree = new MerkleTree(elements)
     }
 
@@ -14,15 +14,15 @@ class MerkleMint {
     }
 
     getElements() {
-        return this.elements
+        return this._elements
     }
 
     getElement(x) {
-        return this.elements[x]
+        return this._elements[x]
     }
 
     getTotalElements() {
-        return this.elements.length
+        return this._elements.length
     }
 
     getRoot() {
@@ -30,28 +30,28 @@ class MerkleMint {
     }
 
     getProofByIndex(index) {
-        if (index > this.elements.length) {
+        if (index > this._elements.length) {
             throw new Error("Index out of bounds for Elements")
         }
-        return this.tree.getHexProof(this.elements[index])
+        return this.tree.getHexProof(this._elements[index])
     }
 
     getProof(el) {
-        if (this.elements.includes(el)) return this.tree.getHexProof(el)
+        if (this._elements.includes(el)) return this.tree.getHexProof(el)
     }
 
     getLeafByIndex(index) {
-        if (index > this.elements.length) {
+        if (index > this._elements.length) {
             throw new Error("Index out of bounds for Elements")
         }
-        return bufferToHex(keccak256(this.elements[index]))
+        return bufferToHex(keccak256(this._elements[index]))
     }
 
     getLeaf(el) {
-        if (!this.elements.includes(el)) {
-          throw new Error("Element not found in tree")
+        if (!this._elements.includes(el)) {
+            throw new Error("Element not found in tree")
         }
-        
+
         return bufferToHex(keccak256(el))
     }
 
