@@ -20,7 +20,7 @@ contract MerkleMintController is Initializable, Ownable, Verify {
     //Struct that defines a Serie
     //ToDO: Add a count of how many images are in a series
     struct Serie {
-        bytes32 merkleRoot;  //The Merkle root for this series.
+        bytes32 merkleRoot; //The Merkle root for this series.
         bytes32[] ipfsHash; //The IPFS hash for more information about this series
         string serieName; //The String value name of this Series
         uint256 seriesID; //The ID of this series- an Integer
@@ -142,8 +142,7 @@ contract MerkleMintController is Initializable, Ownable, Verify {
         emit IPFSHashAdded(_serieNumber, _ipfsHash);
     }
 
-
-//Internal function to find the root which accompanies the requested serie.
+    //Internal function to find the root which accompanies the requested serie.
     function _findRoot(uint256 _serie) internal view returns (bytes32) {
         bytes32 merkleRoot = series[_serie].merkleRoot;
         require(
