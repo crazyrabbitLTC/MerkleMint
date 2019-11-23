@@ -1,22 +1,22 @@
 "use strict"
+const {expect} = require("chai")
+
 const {accounts, contract, defaultSender} = require("@openzeppelin/test-environment")
 const [sender] = accounts
-
 
 const {BN, expectEvent} = require("openzeppelin-test-helpers")
 //const {root, leaf, proof, merkleMint.getElement(0), numElements} = require("./utils/utils.js")
 
-const {MerkleMint } = require("../src/index")
+const {MerkleMint} = require("../src/index")
 
 // const keccak256 = require("keccak256")
 
 const MerkleMintCore = contract.fromArtifact("MerkleMintCore")
 const MerkleMintController = contract.fromArtifact("MerkleMintController")
 
-const {expect} = require("chai")
 const elements = ["love", "anger", "hunger", "shibe"]
 
-const merkleMint = new MerkleMint(elements);
+const merkleMint = new MerkleMint(elements)
 
 describe("MerkleMintController", async () => {
     let mmController
@@ -31,16 +31,18 @@ describe("MerkleMintController", async () => {
     let seriesName = "First Series"
     let ipfsHash = merkleMint.keccak256(seriesName)
 
-   
-
-    
-
     beforeEach(async () => {
         mmCore = await MerkleMintCore.new()
         mmController = await MerkleMintController.new()
 
         await mmController.initializeController(mmCore.address)
-        await mmController.addSerie(series, merkleMint.getRoot(), seriesName, ipfsHash, merkleMint.getTotalElements())
+        await mmController.addSerie(
+            series,
+            merkleMint.getRoot(),
+            seriesName,
+            ipfsHash,
+            merkleMint.getTotalElements(),
+        )
         await mmCore.initialize(
             tokenName,
             tokenSymbol,

@@ -1,7 +1,7 @@
 "use strict"
 
 const {keccak256, bufferToHex} = require("ethereumjs-util")
-const {MerkleTree} = require("./merkleTree")
+const {MerkleTree} = require("./utils/merkleTree")
 
 class MerkleMint {
     constructor(elements) {
