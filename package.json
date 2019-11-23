@@ -2,7 +2,7 @@
     "name": "merklemint",
     "version": "0.0.3bo",
     "description": "A solution for counterfactually minting tokens on ethereum",
-    "main": "index.js",
+    "main": "src/index.js",
     "scripts": {
         "test": "mocha --exit --recursive test",
         "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
@@ -43,7 +43,7 @@
     "eslintConfig": {},
     "husky": {
         "hooks": {
-            "pre-push": "npm run prettier:solidity"
+            "pre-push": "npm run prettier:solidity pretty"
         }
     },
     "lint-staged": {
