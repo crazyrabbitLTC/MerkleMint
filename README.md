@@ -119,6 +119,4 @@ Create a useful utility for automating the merkle mint process.
 
 # The Problem
 
-
-
-Thanx: @Nikesh @Fran @Palla
+Thanx: @nikeshnazareth @frangio @spalladino
