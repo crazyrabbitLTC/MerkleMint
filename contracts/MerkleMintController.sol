@@ -131,7 +131,6 @@ contract MerkleMintController is Verify, AccessControl {
     /**
      * @dev Mint a new Asset (ERC721 Token)
      * @param recipient the recipient of the token
-     * @param asset the intended asset token to mint. This is also the TokensURI
      * @param tokenURI URI for the token.
      * @param leaf required for the merkleproof.
      * @param proof provided for verification.
@@ -139,7 +138,6 @@ contract MerkleMintController is Verify, AccessControl {
      */
     function mintAsset(
         address recipient,
-        string memory asset,
         string memory tokenURI,
         bytes32 leaf,
         bytes32[] memory proof,
@@ -150,14 +148,14 @@ contract MerkleMintController is Verify, AccessControl {
         require(archive[series].merkleRoot.length > 0, "Series does not exist");
         
         // Asset Hash
-        bytes32 assetHash = keccak256(abi.encodePacked(asset, series, leaf, proof));
+        bytes32 assetHash = keccak256(abi.encodePacked(tokenURI, series, leaf, proof));
 
-        // Require this asset has not been minted previously
+        // Require this tokenURI has not been minted previously
         require(!hasAssetBeenMinted[assetHash], "Asset has already been minted");
 
         // Require that the merkle data is correct
         require(
-            isValidData(asset, _findRoot(series), leaf, proof),
+            isValidData(tokenURI, _findRoot(series), leaf, proof),
             "MerkleMintController:: Not a valid Asset"
         );
 

@@ -1,10 +1,13 @@
-"use strict"
+import { keccak256, bufferToHex } from "ethereumjs-util";
 
-const {keccak256, bufferToHex} = require("ethereumjs-util")
-const {MerkleTree} = require("./utils/merkleTree")
+import { MerkleTree } from "./merkleTree";
 
-class MerkleMint {
-    constructor(elements) {
+export class MerkleMint {
+
+    private _elements: any;
+    public tree: any;
+
+    constructor(elements: string[]) {
         this._elements = elements
         this.tree = new MerkleTree(elements)
     }
@@ -17,7 +20,7 @@ class MerkleMint {
         return this._elements
     }
 
-    getElement(x) {
+    getElement(x: any) {
         return this._elements[x]
     }
 
@@ -29,25 +32,25 @@ class MerkleMint {
         return this.tree.getHexRoot()
     }
 
-    getProofByIndex(index) {
+    getProofByIndex(index: any) {
         if (index > this._elements.length) {
             throw new Error("Index out of bounds for Elements")
         }
         return this.tree.getHexProof(this._elements[index])
     }
 
-    getProof(el) {
+    getProof(el: any) {
         if (this._elements.includes(el)) return this.tree.getHexProof(el)
     }
 
-    getLeafByIndex(index) {
+    getLeafByIndex(index: any) {
         if (index > this._elements.length) {
             throw new Error("Index out of bounds for Elements")
         }
         return bufferToHex(keccak256(this._elements[index]))
     }
 
-    getLeaf(el) {
+    getLeaf(el: any) {
         if (!this._elements.includes(el)) {
             throw new Error("Element not found in tree")
         }
@@ -55,15 +58,11 @@ class MerkleMint {
         return bufferToHex(keccak256(el))
     }
 
-    keccak256(item) {
+    keccak256(item: any) {
         return keccak256(item)
     }
 
-    bufferToHex(x) {
+    bufferToHex(x: any) {
         return bufferToHex(x)
     }
-}
-
-module.exports = {
-    MerkleMint,
 }

@@ -22,18 +22,19 @@ contract MerkleMintCore is ERC721, AccessControl {
      * @dev Initialize the Token Contract with Minters and Pausers. The name+symbol are hardCoded.
      * @param TokenName the name of the contract.
      * @param TokenSymbol the symbol of the contract.
-     * @param minters array of addresses that are allowed to mint.
+     * @param admins array of addresses that are allowed to mint.
      */
     constructor(
         string memory TokenName,
         string memory TokenSymbol,
-        address[] memory minters
+        address[] memory admins
     ) ERC721(TokenName, TokenSymbol) {
         // Setup Roles
-        for (uint256 x; x < minters.length; x++) {
-            _setupRole(MINTER_ROLE, minters[x]);
-            _setupRole(BURNER_ROLE, minters[x]);
+        for (uint256 x; x < admins.length; x++) {
+            _setupRole(MINTER_ROLE, admins[x]);
+            _setupRole(BURNER_ROLE, admins[x]);
         }
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function mint(address recipient, string memory tokenURI)
