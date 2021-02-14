@@ -1,11 +1,9 @@
-pragma solidity ^0.5.0;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.7.0;
 
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Enumerable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Metadata.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721MetadataMintable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Pausable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
  * @title Complete ERC721 Non-Fungible Token Standard basic implementation with Metadata, Minting, and Pause Functionality
@@ -13,45 +11,70 @@ import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Pa
  * @dev Based on OpenZeppelin Contracts Ethereum Package
  * @dev see https://github.com/OpenZeppelin/openzeppelin-contracts-ethereum-package
  */
-contract MerkleMintCore is
-    Initializable,
-    ERC721,
-    ERC721Enumerable,
-    ERC721Metadata,
-    ERC721MetadataMintable,
-    ERC721Pausable
-{
+contract MerkleMintCore is ERC721, AccessControl {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+
     /**
      * @dev Initialize the Token Contract with Minters and Pausers. The name+symbol are hardCoded.
+     * @param TokenName the name of the contract.
+     * @param TokenSymbol the symbol of the contract.
      * @param minters array of addresses that are allowed to mint.
-     * @param pausers array of addresses that are allowed to Pause.
      */
-    function initialize(
+    constructor(
         string memory TokenName,
         string memory TokenSymbol,
-        address[] memory minters,
-        address[] memory pausers
-    ) public initializer {
-        ERC721.initialize();
-        ERC721Enumerable.initialize();
-        ERC721Metadata.initialize(TokenName, TokenSymbol);
-
-        // Initialize the minter and pauser roles, and renounce them
-        ERC721MetadataMintable.initialize(address(this));
-        _removeMinter(address(this));
-
-        ERC721Pausable.initialize(address(this));
-        _removePauser(address(this));
-
-        // Add the requested minters and pausers (this can be done after renouncing since
-        // these are the internal calls)
-        for (uint256 i = 0; i < minters.length; ++i) {
-            _addMinter(minters[i]);
-        }
-
-        for (uint256 i = 0; i < pausers.length; ++i) {
-            _addPauser(pausers[i]);
+        address[] memory minters
+    ) ERC721(TokenName, TokenSymbol) {
+        // Setup Roles
+        for (uint256 x; x < minters.length; x++) {
+            _setupRole(MINTER_ROLE, minters[x]);
+            _setupRole(BURNER_ROLE, minters[x]);
         }
     }
 
+    function mint(address recipient, string memory tokenURI)
+        public
+        returns (uint256)
+    {
+        // Caller must have minter role
+        require(hasRole(MINTER_ROLE, msg.sender), "Caller is not a minter");
+
+        // Get new TokenId
+        uint256 newItemId = _tokenIds.current();
+
+        // Mint and set TokenID
+        _mint(recipient, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+
+        // Increment at the end so it starts at zero
+        _tokenIds.increment();
+
+        // Return id
+        return newItemId;
+    }
+
+    function merkleMint(address recipient, string memory tokenURI)
+        public
+        returns (uint256)
+    {
+        // Caller must have minter role
+        require(hasRole(MINTER_ROLE, msg.sender), "Caller is not a minter");
+
+        // Get new TokenId
+        uint256 newItemId = _tokenIds.current();
+
+        // Mint and set TokenID
+        _mint(recipient, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+
+        // Increment at the end so it starts at zero
+        _tokenIds.increment();
+
+        // Return id
+        return newItemId;
+    }
 }

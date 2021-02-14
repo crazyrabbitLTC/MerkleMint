@@ -1,6 +1,7 @@
-pragma solidity ^0.5.0;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.7.0;
 
-import "@openzeppelin/contracts-ethereum-package/contracts/cryptography/MerkleProof.sol";
+import "@openzeppelin/contracts/cryptography/MerkleProof.sol";
 
 contract Verify {
   function isValidData(string memory _asset, bytes32 _root, bytes32 _leaf, bytes32[] memory _proof)

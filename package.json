@@ -1,55 +1,19 @@
 {
-    "name": "merklemint",
-    "version": "0.0.5",
-    "description": "A solution for counterfactually minting tokens on ethereum",
-    "main": "src/index.js",
-    "scripts": {
-        "test": "mocha --exit --recursive test",
-        "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
-        "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**.sol",
-        "pretty": "prettier --write --tab-width 4 \"src/**/*.js\""
-    },
-    "author": "Dennison Bertram (www.dennisonbertram.com)",
-    "license": "MIT",
-    "dependencies": {
-        "@babel/core": "^7.7.2",
-        "@openzeppelin/contracts": "^2.4.0",
-        "@openzeppelin/contracts-ethereum-package": "^2.3.0",
-        "@openzeppelin/test-helpers": "^0.5.3",
-        "@openzeppelin/upgrades": "^2.5.3",
-        "nodemon": "^2.0.1",
-        "openzeppelin-test-helpers": "^0.5.1",
-        "web3": "^1.2.2"
-    },
-    "devDependencies": {
-        "@openzeppelin/test-environment": "0.1.0-rc.1",
-        "babel-preset-es2015": "^6.18.0",
-        "babel-preset-stage-2": "^6.24.1",
-        "babel-preset-stage-3": "^6.17.0",
-        "chai": "^4.2.0",
-        "eslint": "^6.6.0",
-        "eslint-config-airbnb-base": "^14.0.0",
-        "eslint-plugin-import": "^2.18.2",
-        "ethereumjs-util": "^6.2.0",
-        "husky": "^3.0.9",
-        "lint-staged": "^9.4.2",
-        "mocha": "^6.2.2",
-        "prettier": "^1.19.1",
-        "prettier-plugin-solidity": "^1.0.0-alpha.34",
-        "solhint": "^2.3.0",
-        "solhint-plugin-prettier": "0.0.3",
-        "solidity-coverage": "^0.6.7"
-    },
-    "eslintConfig": {},
-    "husky": {
-        "hooks": {
-            "pre-push": "npm run prettier:solidity pretty"
-        }
-    },
-    "lint-staged": {
-        "*.{js,css,json,md}": [
-            "npm run pretty",
-            "git add"
-        ]
-    }
+  "name": "hardhat-project",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.1",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.27",
+    "chai": "^4.3.0",
+    "ethereum-waffle": "^3.2.2",
+    "ethers": "^5.0.31",
+    "hardhat": "^2.0.10",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.5"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.4.0"
+  }
 }
