@@ -144,14 +144,19 @@ contract MerkleMintController is Verify, AccessControl {
         uint256 series
     ) external {
 
+        // Require this tokenURI has not been minted previously
+        require(!hasAssetBeenMinted[assetHash], "Asset has already been minted");
+        
+        // Mark asset as minted
+        // Prevent reentrancy (thanks @kyle Stargarden)
+        hasAssetBeenMinted[assetHash] = true;
+
         // Require that Series Exists
         require(archive[series].merkleRoot.length > 0, "Series does not exist");
         
         // Asset Hash
         bytes32 assetHash = keccak256(abi.encodePacked(tokenURI, series, leaf, proof));
 
-        // Require this tokenURI has not been minted previously
-        require(!hasAssetBeenMinted[assetHash], "Asset has already been minted");
 
         // Require that the merkle data is correct
         require(
@@ -168,8 +173,6 @@ contract MerkleMintController is Verify, AccessControl {
         // Increment the number of tokens minted so far
         archive[series].itemsRedeemed++;
 
-        // Mark asset as minted
-        hasAssetBeenMinted[assetHash] = true;
 
         // Emit MerkleMinted
         emit MerkleMinted(msg.sender, recipient, tokenURI, series, _findRoot(series), leaf, archive[series].catalogue.length-1);
